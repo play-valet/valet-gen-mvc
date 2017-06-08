@@ -30,12 +30,12 @@ object TwirlScaffoldView extends ValetProcessCycle with TwirlConst {
 
   private def arrange(pathDto: TwirlPathDto) = {
     if (isActiveInternet) {
-      //            initDir(pathDto)
-      //            gitClone(pathDto)
-      //            bowerInstall(pathDto)
-      //            movetoDownload(pathDto)
-      //            copyToAppAssets(pathDto)
-      //            copyToPublicAssets(pathDto)
+      initDir(pathDto)
+      gitClone(pathDto)
+      bowerInstall(pathDto)
+      movetoDownload(pathDto)
+      copyToAppAssets(pathDto)
+      copyToPublicAssets(pathDto)
       copyToView(pathDto)
     } else {
       val ANSI_RED = "\u001B[31m"
@@ -45,13 +45,7 @@ object TwirlScaffoldView extends ValetProcessCycle with TwirlConst {
   }
 
   private def adjustTemplateViewToNowProject(fileList: Seq[File], dtos: ScaffoldDtos, pathDto: TwirlPathDto) = {
-    //    cli(s"rm -rf " + "/Users/keigo/development/scalaide/scalapress/output")
-    //    cli(s"mkdir " + "/Users/keigo/development/scalaide/scalapress/output")
-
-    fileList.foreach { file =>
-      FuncCrud.run(file, dtos, pathDto)
-
-    }
+    fileList.foreach { file => FuncCrud.run(file, dtos, pathDto) }
   }
 
 
