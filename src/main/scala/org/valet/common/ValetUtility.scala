@@ -30,7 +30,7 @@ trait ValetUtility extends Utility with ValetConst {
   }
 
   def getAgTableFieldName(generatedTable: GeneratedTable): String = {
-    agPrefix + getTableFieldName(generatedTable)
+    toFirstCharLower(getAgTableName(generatedTable))
   }
 
   def getTableFieldName(className: String): String = {
