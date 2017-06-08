@@ -28,7 +28,7 @@ object DefTwirl_ASync_Controller extends ValetUtility  {
         |
         |  def showIndex = Action.async { implicit request =>
         |    agPostsDao.all.map { result =>
-        |      Ok(posts.list(AgResultDtos(None, postsDtoList = Some(result))))
+        |      Ok(posts.list(AgResultDtos(None, postsDtoList = result)))
         |    }.recover {
         |      case _ => InternalServerError
         |    }

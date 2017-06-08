@@ -168,7 +168,7 @@ object ListCrud extends CrudUtils {
     // custom tag replace 処理
     dto.getElement.root().ownerDocument().body().children().toString.split("\n").map {
       case ln if ln.trim.startsWith("<" + CUSTOM_TAG)  =>
-        s"""|@$DTO_PARAM.${getTableFieldName(ves.nowTable.get)}DtoList.getOrElse(Seq()).map { $ROW_PARAM =>
+        s"""|@$DTO_PARAM.${getTableFieldName(ves.nowTable.get)}DtoList.map { $ROW_PARAM =>
             |  <$trueTagName>""".stripMargin
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"  </$trueTagName>\n}".stripMargin
       case ln                                          => ln

@@ -28,9 +28,10 @@ object DefRoutes extends ValetUtility {
 
   def getAll(nowTable: GeneratedTable, dtos: ScaffoldDtos): Unit = {
 
-    makeFileIfNotExist(new File("conf/routes"))
+    val filepath = "./conf/routes"
 
-    val source: Seq[String] = Source.fromFile("conf/routes", "UTF-8").getLines().toSeq
+    makeFileIfNotExist(new File(filepath))
+    val source: Seq[String] = Source.fromFile(filepath, "UTF-8").getLines().toSeq
     val formatSource = source.map(str => toSingleSpace(str))
     val list :Seq[String] = methodList(nowTable).map { methodRoute =>
       formatSource.contains(toSingleSpace(methodRoute)) match {
@@ -40,9 +41,9 @@ object DefRoutes extends ValetUtility {
     }.filter(_.isDefined).map(_.get)
 
     if(list.nonEmpty) {
-      writeAppending(new File("conf/routes"), "\n")
+      writeAppending(new File(filepath), "\n")
       list.foreach { addrow =>
-        writeAppending(new File("conf/routes"), addrow)
+        writeAppending(new File(filepath), addrow)
       }
     }
   }
