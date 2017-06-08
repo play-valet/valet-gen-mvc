@@ -179,13 +179,13 @@ object ListCrud extends CrudUtils {
 object ButtonCrud extends CrudUtils {
   def actTriggerButton(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
     val btnList = Seq(
-      SCAFFOLD_LIST_BTN_SHOW_EDIT,
+      SCAFFOLD_LIST_BTN_SHOW_CREATE,
       SCAFFOLD_LIST_BTN_SHOW_DETAIL,
       SCAFFOLD_LIST_BTN_SHOW_EDIT,
+      SCAFFOLD_LIST_BTN_SUBMIT_DELETE,
       SCAFFOLD_DETAIL_BTN_SHOW_EDIT,
       SCAFFOLD_CREATE_BTN_SUBMIT_CREATE,
       SCAFFOLD_EDIT_BTN_SUBMIT_EDIT,
-      SCAFFOLD_LIST_BTN_SUBMIT_DELETE,
       SCAFFOLD_DETAIL_BTN_SUBMIT_DELETE,
       SCAFFOLD_CREATE_BTN_CANCEL,
       SCAFFOLD_EDIT_BTN_CANCEL,
@@ -204,8 +204,6 @@ object ButtonCrud extends CrudUtils {
 }
 
 trait CrudUtils extends TwirlConst {
-
-
 
   def getPrimaryKeySyntaxTypeInt(ves: Valiables): String = {
     val primaryKeyFieldName = ves.nowTable.flatMap(_.columnList.headOption).map(_.columnName).getOrElse("")
