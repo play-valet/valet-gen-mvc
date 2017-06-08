@@ -9,7 +9,7 @@ object CrudTriggers extends CrudCommons {
     for {
       (column, i) <- TwirlLogic.getUseColumn(ves).zipWithIndex
     } yield {
-      if(i == 0) {
+      if (i == 0) {
 
       } else {
         dto
@@ -55,6 +55,65 @@ object CrudTriggers extends CrudCommons {
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"}".stripMargin
       case ln                                          => ln
     }.mkString("\n")
+  }
+
+  def actTriggerDetailField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
+    for {
+      (column, i) <- TwirlLogic.getUseColumn(ves).zipWithIndex
+    } yield {
+      if (i == 0) {
+        dto
+          .scopeClosestElements(CLASS_SCAFFOLD_DETAIL_ITERATOR) { element =>
+            CustomJsoupElement(element)
+              // 自身を複製。複製したものは取っておいて、今のものに対して処理を行うことでリスト処理を実現する。わかりづらいので注意。
+              .copySelfAfter
+              .removeAttrValue("class", SCAFFOLD_DETAIL_ITERATOR)
+
+              // フィールド処理開始
+              .replaceTextContent(CLASS_SCAFFOLD_DETAIL_FIELD, column.columnName)
+              // 表示用 primary id
+              .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_DETAIL_VALUE, getTagDefault("span", None))
+              .replaceTextContent(CLASS_SCAFFOLD_DETAIL_VALUE, getEditFieldValue(column, ves))
+              .removeAttrSearched("type", CLASS_SCAFFOLD_DETAIL_VALUE)
+              .removeAttrSearched("value", CLASS_SCAFFOLD_DETAIL_VALUE)
+              .removeAttrSearched("name", CLASS_SCAFFOLD_DETAIL_VALUE)
+
+              // 送信用 primary id
+              .addAfterSearched(CLASS_SCAFFOLD_DETAIL_VALUE,
+              getTagDefault("input-hidden",
+                Some(Map(
+                  "value" -> getEditFieldValue(column, ves),
+                  "name" -> toSnakeCase(column.columnName)
+                ))))
+
+              .removeAttrValue("class", SCAFFOLD_DETAIL_VALUE, CLASS_SCAFFOLD_DETAIL_VALUE)
+              .removeAttrValue("class", SCAFFOLD_DETAIL_FIELD, CLASS_SCAFFOLD_DETAIL_FIELD)
+          }
+      } else {
+        dto
+          .scopeClosestElements(CLASS_SCAFFOLD_DETAIL_ITERATOR) { element =>
+            CustomJsoupElement(element)
+              // 自身を複製する
+              .copySelfAfter
+              .removeAttrValue("class", SCAFFOLD_DETAIL_ITERATOR)
+              // 処理開始
+              .replaceTextContent(CLASS_SCAFFOLD_DETAIL_FIELD, column.columnName)
+              .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_DETAIL_VALUE, getTagDefault("span", None))
+              .replaceTextContent(CLASS_SCAFFOLD_DETAIL_VALUE, getEditFieldValue(column, ves))
+              .removeAttrSearched("type", CLASS_SCAFFOLD_DETAIL_VALUE)
+              .removeAttrSearched("value", CLASS_SCAFFOLD_DETAIL_VALUE)
+              .removeAttrSearched("name", CLASS_SCAFFOLD_DETAIL_VALUE)
+
+              .removeAttrValue("class", SCAFFOLD_DETAIL_VALUE, CLASS_SCAFFOLD_DETAIL_VALUE)
+              .removeAttrValue("class", SCAFFOLD_DETAIL_FIELD, CLASS_SCAFFOLD_DETAIL_FIELD)
+          }
+      }
+    }
+    dto.removeElement(CLASS_SCAFFOLD_DETAIL_ITERATOR)
+  }
+
+  def actTriggerDetailLogic(dto: CustomJsoupElement, ves: Valiables): String = {
+    dto.getElement.root().ownerDocument().body().children().toString
   }
 
 
@@ -245,6 +304,7 @@ trait CrudCommons extends TwirlConst {
       ""
     }
   }
+
   def getEditFieldValue(column: GeneratedColumn, ves: Valiables): String = {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {

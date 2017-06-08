@@ -73,9 +73,9 @@ object FuncCrud extends TwirlConst {
           CrudTriggers.actTriggerButton(dto, ves)
           CrudTriggers.actTriggerEditLogic(dto, ves).replace("&quot;", "\"") + "\n"
         case "detail" =>
-          CrudTriggers.actTriggerEditField(dto, ves)
+          CrudTriggers.actTriggerDetailField(dto, ves)
           CrudTriggers.actTriggerButton(dto, ves)
-          CrudTriggers.actTriggerEditLogic(dto, ves).replace("&quot;", "\"") + "\n"
+          CrudTriggers.actTriggerDetailLogic(dto, ves).replace("&quot;", "\"") + "\n"
         case "list"   =>
           CrudTriggers.actTriggerListField(dto, ves)
           CrudTriggers.actTriggerButton(dto, ves)
