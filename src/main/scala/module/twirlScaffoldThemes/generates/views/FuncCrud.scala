@@ -13,7 +13,7 @@ object FuncCrud extends TwirlConst {
     val dirName = file.getParentFile.getName
     if (dirName == CRUD_TEMPLATE_DIR) {
       dtos.generatedTables.foreach { nowTable =>
-        if (isScaffoldOk(valetconf_isscaffoldlist_controller, dtos, nowTable)) {
+        if (isScaffoldOk(VALETCONF_ISSCAFFOLDLIST_CONTROLLER, dtos, nowTable)) {
           val parsed: Option[Template] = TwirlLogic.getTwirlParsed(file)
           if (parsed.isDefined) {
             val ves = Valiables(dtos, pathDto, Some(file), Some(nowTable))

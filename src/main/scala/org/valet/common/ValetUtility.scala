@@ -45,19 +45,23 @@ trait ValetUtility extends Utility with ValetConst {
     className + suffixObject
   }
 
-  // custom
+  // form custom
   def getAgCreateForm(generatedTable: GeneratedTable): String = {
     getAgTableName(generatedTable) + createFormStr + suffixForm
   }
-
+  def getAgCreateFieldForm(generatedTable: GeneratedTable): String = {
+    getAgTableFieldName(generatedTable) + createFormStr + suffixForm
+  }
   def getAgEditForm(generatedTable: GeneratedTable): String = {
     getAgTableName(generatedTable) + editFormStr + suffixForm
+  }
+  def getAgEditFieldForm(generatedTable: GeneratedTable): String = {
+    getAgTableFieldName(generatedTable) + editFormStr + suffixForm
   }
 
   def getAgMappingForm(generatedTable: GeneratedTable): String = {
     agPrefix + mappingFormPrefix + getTableName(generatedTable) + suffixForm
   }
-
 
   // Dao
   def getDao(generatedTable: GeneratedTable): String = {

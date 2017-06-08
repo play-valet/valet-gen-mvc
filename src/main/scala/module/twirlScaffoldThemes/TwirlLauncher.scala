@@ -11,7 +11,7 @@ object TwirlLauncher extends Utility {
   def run(dtos: ScaffoldDtos): Unit = {
     val customizeTaskList: Seq[ValetProcessCycle] = Seq(
       TwirlScaffoldController,
-//      TwirlScaffoldDto,
+      TwirlScaffoldDto,
       TwirlScaffoldView
     )
     customizeTaskList.foreach { obj => obj.initAction(dtos) }

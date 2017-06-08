@@ -36,7 +36,7 @@ object CreateCrud extends CrudUtils {
     dto
       .scopeClosestElement(CLASS_SCAFFOLD_CREATE_LOGIC_FORM)
       .renameTag(CUSTOM_TAG)
-      .replaceAttr(CUSTOM_TAG, "name", getCreateFormParam(ves))
+      .replaceAttr(CUSTOM_TAG, "name", getAgCreateFieldForm(ves.nowTable.get))
       .removeAttrValue("class", SCAFFOLD_CREATE_LOGIC_FORM)
 
     // custom tag replace 処理
@@ -46,7 +46,7 @@ object CreateCrud extends CrudUtils {
           dto
             .scopeRoot
             .scopeClosestElement(CUSTOM_TAG).getAttr.map(x =>s""" '${x._1} -> "${x._2}"""").mkString(",")
-        s"""|@helper.form(${getRouteController(ves)}.$METHOD_STORE(), $formAttr) {""".stripMargin
+        s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_STORE(), $formAttr) {""".stripMargin
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"}".stripMargin
       case ln                                          => ln
     }.mkString("\n")
@@ -117,7 +117,7 @@ object EditCrud extends CrudUtils {
     dto
       .scopeClosestElement(CLASS_SCAFFOLD_EDIT_LOGIC_FORM)
       .renameTag(CUSTOM_TAG)
-      .replaceAttr(CUSTOM_TAG, "name", getEditFormParam(ves))
+      .replaceAttr(CUSTOM_TAG, "name", getAgEditFieldForm(ves.nowTable.get))
       .removeAttrValue("class", SCAFFOLD_EDIT_LOGIC_FORM)
 
     // custom tag replace 処理
@@ -127,7 +127,7 @@ object EditCrud extends CrudUtils {
           dto
             .scopeRoot
             .scopeClosestElement(CUSTOM_TAG).getAttr.map(x =>s""" '${x._1} -> "${x._2}"""").mkString(",")
-        s"""|@helper.form(${getRouteController(ves)}.$METHOD_UPDATE(${getPrimaryKeySyntaxTypeInt(ves)}), $formAttr) {""".stripMargin
+        s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_UPDATE(${getPrimaryKeySyntaxTypeInt(ves)}), $formAttr) {""".stripMargin
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"}".stripMargin
       case ln                                          => ln
     }.mkString("\n")
@@ -205,24 +205,13 @@ object ButtonCrud extends CrudUtils {
 
 trait CrudUtils extends TwirlConst {
 
-  val FORM_PREFIX = "ScaffoldForm"
-
-  def getEditFormParam(ves: Valiables): String = s"""ag${getTableName(ves.nowTable.get)}EditForm"""
-
-  def getCreateFormParam(ves: Valiables): String = s"""ag${getTableName(ves.nowTable.get)}CreateForm"""
-
-  def getRouteController(ves: Valiables): String = pkg_controller_ag + s".routes.${getAgTableName(ves.nowTable.get)}Controller"
-
-  def getEditSubmitFormName(ves: Valiables): String = "edit" + FORM_PREFIX + getTableName(ves.nowTable.get)
-
-  def getCreateSubmitFormName(ves: Valiables): String = "create" + FORM_PREFIX + getTableName(ves.nowTable.get)
 
 
   def getPrimaryKeySyntaxTypeInt(ves: Valiables): String = {
     val primaryKeyFieldName = ves.nowTable.flatMap(_.columnList.headOption).map(_.columnName).getOrElse("")
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {
-      s"""$DTO_PARAM.${getEditFormParam(ves)}("${toSnakeCase(primaryKeyFieldName)}").value.getOrElse("-1").toInt"""
+      s"""$DTO_PARAM.${getAgEditFieldForm(ves.nowTable.get)}("${toSnakeCase(primaryKeyFieldName)}").value.getOrElse("-1").toInt"""
     } else {
       ""
     }
@@ -233,17 +222,17 @@ trait CrudUtils extends TwirlConst {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {
       btn match {
-        case SCAFFOLD_LIST_BTN_SHOW_CREATE     => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWCREATE()""")
-        case SCAFFOLD_LIST_BTN_SHOW_DETAIL     => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWDETAIL($ROW_PARAM.$primaryKeyFieldName)""")
-        case SCAFFOLD_LIST_BTN_SHOW_EDIT       => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWEDIT($ROW_PARAM.$primaryKeyFieldName)""")
-        case SCAFFOLD_LIST_BTN_SUBMIT_DELETE   => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_DESTROY($ROW_PARAM.$primaryKeyFieldName)""")
-        case SCAFFOLD_EDIT_BTN_SUBMIT_EDIT     => Map("href" -> "javascript:void(0)", "onclick" -> s"document.${getEditSubmitFormName(ves)}.submit();return false;")
-        case SCAFFOLD_EDIT_BTN_CANCEL          => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWINDEX()""")
-        case SCAFFOLD_DETAIL_BTN_SHOW_EDIT     => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWEDIT(${getPrimaryKeySyntaxTypeInt(ves)})""")
-        case SCAFFOLD_DETAIL_BTN_SUBMIT_DELETE => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_DESTROY(${getPrimaryKeySyntaxTypeInt(ves)})""")
-        case SCAFFOLD_DETAIL_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWINDEX()""")
-        case SCAFFOLD_CREATE_BTN_SUBMIT_CREATE => Map("href" -> "javascript:void(0)", "onclick" -> s"document.${getCreateSubmitFormName(ves)}.submit();return false;")
-        case SCAFFOLD_CREATE_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves)}.$METHOD_SHOWINDEX()""")
+        case SCAFFOLD_LIST_BTN_SHOW_CREATE     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWCREATE()""")
+        case SCAFFOLD_LIST_BTN_SHOW_DETAIL     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWDETAIL($ROW_PARAM.$primaryKeyFieldName)""")
+        case SCAFFOLD_LIST_BTN_SHOW_EDIT       => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWEDIT($ROW_PARAM.$primaryKeyFieldName)""")
+        case SCAFFOLD_LIST_BTN_SUBMIT_DELETE   => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_DESTROY($ROW_PARAM.$primaryKeyFieldName)""")
+        case SCAFFOLD_EDIT_BTN_SUBMIT_EDIT     => Map("href" -> "javascript:void(0)", "onclick" -> s"document.${getEditSubmitFormName(ves.nowTable.get)}.submit();return false;")
+        case SCAFFOLD_EDIT_BTN_CANCEL          => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWINDEX()""")
+        case SCAFFOLD_DETAIL_BTN_SHOW_EDIT     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWEDIT(${getPrimaryKeySyntaxTypeInt(ves)})""")
+        case SCAFFOLD_DETAIL_BTN_SUBMIT_DELETE => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_DESTROY(${getPrimaryKeySyntaxTypeInt(ves)})""")
+        case SCAFFOLD_DETAIL_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWINDEX()""")
+        case SCAFFOLD_CREATE_BTN_SUBMIT_CREATE => Map("href" -> "javascript:void(0)", "onclick" -> s"document.${getCreateSubmitFormName(ves.nowTable.get)}.submit();return false;")
+        case SCAFFOLD_CREATE_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWINDEX()""")
         case _                                 => Map()
       }
     } else {
@@ -255,7 +244,7 @@ trait CrudUtils extends TwirlConst {
   def getFieldValue(column: GeneratedColumn, ves: Valiables): String = {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {
-      "@{" + DTO_PARAM + "." + getCreateFormParam(ves) + "(\"" + toSnakeCase(column.columnName) + "\").value}"
+      "@{" + DTO_PARAM + "." + getAgCreateFieldForm(ves.nowTable.get) + "(\"" + toSnakeCase(column.columnName) + "\").value}"
     } else {
       ""
     }

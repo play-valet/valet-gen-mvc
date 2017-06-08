@@ -15,7 +15,7 @@ object ScaffoldDao extends ValetProcessCycle with ValetUtility {
   override def mainAction(dtos: ScaffoldDtos): Unit = {
     dtos.generatedTables.foreach { nowTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, nowTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_dao)) {
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_DAO)) {
         forceWrite(s"$path_model_dao_ag/${getAgDao(nowTable)}.scala", DefDao.getAll(nowTable, dtos))
       }
     }

@@ -5,44 +5,45 @@ import org.valet.common._
 object DefForm extends ValetUtility with DefFormUtils {
 
   def getAll(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
-    val createFormClassName = getAgCreateForm(nowTable)
-    val editFormClassName = getAgEditForm(nowTable)
     s"""|package $pkg_form_ag
         |
         |import play.api.data.Form
         |import play.api.data.Forms._
         |import $pkg_model_tables_ag.$default_TABLES_NAME._
         |
-        |${getFormDto(nowTable, dtos, createFormClassName, isIncludeId = true)}
-        |${getFormMapping(nowTable, dtos, createFormClassName, isIncludeId = true)}
-        |${getFormDto(nowTable, dtos, editFormClassName, isIncludeId = false)}
-        |${getFormMapping(nowTable, dtos, editFormClassName, isIncludeId = false)}
+        |${getCreateFormDto(nowTable, dtos)}
+        |${getCreateFormMapping(nowTable, dtos)}
+        |${getEditFormDto(nowTable, dtos)}
+        |${getEditFormMapping(nowTable, dtos)}
         |
         |object ${getAgMappingForm(nowTable)} {
         |
-        |${getCreate_toEntityMethod(nowTable, dtos, createFormClassName)}
-        |${getEdit_toEntityMethod(nowTable, dtos, editFormClassName)}
-        |${getEdit_toFormMethod(nowTable, dtos, editFormClassName)}
+        |${getCreate_toEntityMethod(nowTable, dtos)}
+        |${getEdit_toEntityMethod(nowTable, dtos)}
+        |${getEdit_toFormMethod(nowTable, dtos)}
         |
         |}
     """.stripMargin
   }
 
-  private def getEdit_toFormMethod(nowTable: GeneratedTable, dtos: ScaffoldDtos, className: String): String = {
+  private def getEdit_toFormMethod(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val className = getAgEditForm(nowTable)
     s"""|  // db:${getTableName(nowTable)}
         |  def toEditForm(id: Int, form: ${nowTable.tableName}): Form[$className] = {
         |    ${getObj(className)}.${toFirstCharLower(className)}.fill($className(id, ${getTailParam_noview(nowTable, dtos)}))
         |  }""".stripMargin
   }
 
-  private def getCreate_toEntityMethod(nowTable: GeneratedTable, dtos: ScaffoldDtos, className: String): String = {
+  private def getCreate_toEntityMethod(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val className = getAgCreateForm(nowTable)
     s"""|  // db:${getTableName(nowTable)}
         |  def toEntity(form: $className): ${nowTable.tableName} = {
         |    ${nowTable.tableName}(-1, ${getTailParam(nowTable, dtos)})
         |  }""".stripMargin
   }
 
-  private def getEdit_toEntityMethod(nowTable: GeneratedTable, dtos: ScaffoldDtos, className: String): String = {
+  private def getEdit_toEntityMethod(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val className = getAgEditForm(nowTable)
     s"""|  // db:${getTableName(nowTable)}
         |  def toEntity(id: Int, form: $className): ${nowTable.tableName} = {
         |    ${nowTable.tableName}(id, ${getTailParam(nowTable, dtos)})
@@ -69,12 +70,13 @@ object DefForm extends ValetUtility with DefFormUtils {
     }.filter(!_.isEmpty).mkString(", ")
   }
 
-
-  private def getFormMapping(nowTable: GeneratedTable, dtos: ScaffoldDtos, className: String, isIncludeId: Boolean): String = {
-    val iterateColumnList = if (isIncludeId) nowTable.columnList.tail else nowTable.columnList
+  private def getCreateFormMapping(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val iterateColumnList = nowTable.columnList.tail
+    val caseClass = getAgCreateForm(nowTable)
+    val caseClassField = getAgCreateFieldForm(nowTable)
     s"""
-       |object ${getObj(className)} {
-       |  val ${toFirstCharLower(className)} = Form(
+       |object ${getObj(caseClass)} {
+       |  val $caseClassField = Form(
        |    mapping(
        | """.stripMargin +
       iterateColumnList.map { column =>
@@ -85,16 +87,56 @@ object DefForm extends ValetUtility with DefFormUtils {
         }
       }.filter(!_.isEmpty).mkString(",\n") +
       s"""|
-          |    )($className.apply)($className.unapply)
+          |    )($caseClass.apply)($caseClass.unapply)
           |  )
           |}
           |""".stripMargin
   }
 
-  private def getFormDto(nowTable: GeneratedTable, dtos: ScaffoldDtos, className: String, isIncludeId: Boolean): String = {
-    val iterateColumnList = if (isIncludeId) nowTable.columnList.tail else nowTable.columnList
+  private def getEditFormMapping(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val iterateColumnList = nowTable.columnList
+    val caseClass = getAgEditForm(nowTable)
+    val caseClassField = getAgEditFieldForm(nowTable)
     s"""
-       |case class $className(""".stripMargin +
+       |object ${getObj(caseClass)} {
+       |  val $caseClassField = Form(
+       |    mapping(
+       | """.stripMargin +
+      iterateColumnList.map { column =>
+        if (IsColumn_Having_NO_VIEW_MODEL(column, nowTable, dtos)) {
+          ""
+        } else {
+          s"""|     "${toSnakeCase(column.columnName)}" -> ${alterFormParam(column.columnType)}""".stripMargin
+        }
+      }.filter(!_.isEmpty).mkString(",\n") +
+      s"""|
+          |    )($caseClass.apply)($caseClass.unapply)
+          |  )
+          |}
+          |""".stripMargin
+  }
+
+  private def getCreateFormDto(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val iterateColumnList = nowTable.columnList.tail
+    val caseClass = getAgCreateForm(nowTable)
+    s"""
+       |case class $caseClass(""".stripMargin +
+      iterateColumnList.map { column =>
+        if (IsColumn_Having_NO_VIEW_MODEL(column, nowTable, dtos)) {
+          ""
+        } else {
+          s""" ${column.columnName}: ${column.columnType}""".stripMargin
+        }
+      }.filter(!_.isEmpty).mkString(",") +
+      """|)
+      """.stripMargin
+  }
+
+  private def getEditFormDto(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+    val iterateColumnList = nowTable.columnList
+    val caseClass = getAgEditForm(nowTable)
+    s"""
+       |case class $caseClass(""".stripMargin +
       iterateColumnList.map { column =>
         if (IsColumn_Having_NO_VIEW_MODEL(column, nowTable, dtos)) {
           ""

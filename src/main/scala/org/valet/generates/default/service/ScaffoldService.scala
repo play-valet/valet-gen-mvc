@@ -20,7 +20,7 @@ object ScaffoldService extends ValetProcessCycle with ValetUtility {
     // by table
     dtos.generatedTables.foreach { slickTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, slickTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_service)) {
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_SERVICE)) {
 
       }
     }

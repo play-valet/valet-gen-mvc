@@ -13,7 +13,7 @@ object ScaffoldRoutes extends ValetProcessCycle with ValetUtility {
   override def mainAction(dtos: ScaffoldDtos): Unit = {
     dtos.generatedTables.foreach { nowTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, nowTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_controller)) {
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         DefRoutes.getAll(nowTable, dtos)
       }
     }

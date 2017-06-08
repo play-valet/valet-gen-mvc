@@ -5,12 +5,11 @@ import org.valet.common._
 object DefViewDto extends ValetUtility {
 
   def getAll(dtos: ScaffoldDtos): String = {
-    //    val tableNameRowAccount = dtos.confDto.modulesAuthTableAccountTableName
     s"""package $pkg_model_dto_ag
        |
        |import $pkg_model_tables_ag.$default_TABLES_NAME._
        |
-       |case class $default_ag_resultViewDtos(
+       |case class ${default_ag_resultViewDtos(dtos)}(
        |                    account: Option[String]
        |${paramList(dtos)}
        |                  ) {
@@ -18,7 +17,7 @@ object DefViewDto extends ValetUtility {
        |            account: Option[String] = this.account
        |${copyParamList(dtos)}
        |          ) = {
-       |    new $default_ag_resultViewDtos(
+       |    new ${default_ag_resultViewDtos(dtos)}(
        |      account
        |${newParamList(dtos)}
        |    )
@@ -26,17 +25,16 @@ object DefViewDto extends ValetUtility {
        |}
        |
      """.stripMargin
-
   }
 
   def paramList(dtos: ScaffoldDtos): String = {
     dtos.generatedTables.map { nowTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, nowTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_controller)) {
-        val tableName = getTableName(nowTable)
-        getTableFieldName(nowTable)
-        s"""|                    ,${toFirstCharLower(tableName)}Dto: Option[${nowTable.tableName}] = None""".stripMargin + "\n" +
-          s"""|                    ,${toFirstCharLower(tableName)}DtoList: Seq[${nowTable.tableName}] = Seq()""".stripMargin
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
+        s"""|                    ,${getAgCreateFieldForm(nowTable)}: Form[${getAgCreateForm(nowTable)}] = $pkg_form_ag.${getObj(getAgCreateForm(nowTable))}.${getAgCreateFieldForm(nowTable)}
+            |                    ,${getAgEditFieldForm(nowTable)}: Form[${getAgEditForm(nowTable)}] = $pkg_form_ag.${getObj(getAgEditForm(nowTable))}.${getAgEditFieldForm(nowTable)}
+            |                 // ,${getTableFieldName(nowTable)}Dto:  Option[${getTableName(nowTable)}] = None
+            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${getTableName(nowTable)}] = Seq()""".stripMargin
       } else {
         ""
       }
@@ -46,10 +44,11 @@ object DefViewDto extends ValetUtility {
   def copyParamList(dtos: ScaffoldDtos): String = {
     dtos.generatedTables.map { nowTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, nowTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_controller)) {
-        val tableName = getTableName(nowTable)
-        s"""|            ,${toFirstCharLower(tableName)}Dto: Option[${nowTable.tableName}] = this.${toFirstCharLower(tableName)}Dto""".stripMargin + "\n" +
-          s"""|            ,${toFirstCharLower(tableName)}DtoList: Seq[${nowTable.tableName}] = this.${toFirstCharLower(tableName)}DtoList""".stripMargin
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
+        s"""|                    ,${getAgCreateFieldForm(nowTable)}: Form[${getAgCreateForm(nowTable)}] = this.${getAgCreateFieldForm(nowTable)}
+            |                    ,${getAgEditFieldForm(nowTable)}: Form[${getAgEditForm(nowTable)}] = this.${getAgEditFieldForm(nowTable)}
+            |                 // ,${getTableFieldName(nowTable)}Dto:  Option[${getTableName(nowTable)}] = this.${getTableFieldName(nowTable)}
+            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${getTableName(nowTable)}] = this.${getTableFieldName(nowTable)}""".stripMargin
       } else {
         ""
       }
@@ -59,10 +58,11 @@ object DefViewDto extends ValetUtility {
   def newParamList(dtos: ScaffoldDtos): String = {
     dtos.generatedTables.map { nowTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, nowTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_controller)) {
-        val tableName = getTableName(nowTable)
-        s"""|      ,${toFirstCharLower(tableName)}Dto""".stripMargin + "\n" +
-          s"""|      ,${toFirstCharLower(tableName)}DtoList""".stripMargin
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
+        s"""|                    ,${getAgCreateFieldForm(nowTable)}
+            |                    ,${getAgEditFieldForm(nowTable)}
+            |                 // ,${getTableFieldName(nowTable)}Dto
+            |                    ,${getTableFieldName(nowTable)}DtoList""".stripMargin
       } else {
         ""
       }

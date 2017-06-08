@@ -184,7 +184,6 @@ object TwirlLogic extends TwirlConst {
   private def alterTwirlPathArgument(last: String, ves: Valiables): String = {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     val resultDtoName = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoName
-
     if (isUsevResultDto == "YES") {
       if (ves.file.get.getName != "main.scala.html") {
         toSingleSpace(last).replace("()", s"($DTO_PARAM)")

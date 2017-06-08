@@ -12,7 +12,12 @@ object TwirlScaffoldDto extends ValetProcessCycle with ValetUtility {
   }
 
   override def mainAction(dtos: ScaffoldDtos): Unit = {
-    forceWrite(s"$path_model_dto_ag/$default_ag_resultViewDtos.scala", DefViewDto.getAll(dtos))
+    val isUsevResultDto = dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
+    if (isUsevResultDto == "YES") {
+      forceWrite(s"$path_model_dto_ag/${default_ag_resultViewDtos(dtos)}.scala", DefViewDto.getAll(dtos))
+    }
+
+
   }
 
   override def endAction(dtos: ScaffoldDtos): Unit = {}

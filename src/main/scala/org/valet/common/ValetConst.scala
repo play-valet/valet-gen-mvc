@@ -4,9 +4,9 @@ trait ValetConst {
 
 
   val VALETCONF_NO_VIEW_MODEL = "NO_VIEW_MODEL"
-  val valetconf_isscaffoldlist_dao = "dao"
-  val valetconf_isscaffoldlist_service = "service"
-  val valetconf_isscaffoldlist_controller = "controller"
+  val VALETCONF_ISSCAFFOLDLIST_DAO = "dao"
+  val VALETCONF_ISSCAFFOLDLIST_SERVICE = "service"
+  val VALETCONF_ISSCAFFOLDLIST_CONTROLLER = "controller"
 
   val autogenName = "autogen"
   val implementNm = "implement"
@@ -120,8 +120,8 @@ trait ValetConst {
   // default class
   val default_TABLES_NAME : String = "Tables"
 
-  val default_ag_resultViewDtos : String = agPrefix + "ResultDtos"
-  val default_im_resultViewDtos : String = "ResultDtos"
+  def default_ag_resultViewDtos(dtos: ScaffoldDtos) : String = agPrefix + dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoName
+  def default_im_resultViewDtos(dtos: ScaffoldDtos) : String = dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoName
   val default_ag_exceptionDtos  : String = agPrefix + "Exceptions"
   val default_im_exceptionDtos  : String = "Exceptions"
   val default_ag_const          : String = agPrefix + "Const"
@@ -141,8 +141,8 @@ trait ValetConst {
   val default_ag_auditService   : String = agPrefix + "AuditService"
   val default_im_auditService   : String = "AuditService"
 
-  val ag_filed_resultViewDtos : String = default_ag_resultViewDtos.head.toLower + default_ag_resultViewDtos.tail
-  val im_filed_resultViewDtos : String = default_im_resultViewDtos.head.toLower + default_im_resultViewDtos.tail
+  def ag_filed_resultViewDtos(dtos: ScaffoldDtos) : String = default_ag_resultViewDtos(dtos).head.toLower + default_ag_resultViewDtos(dtos).tail
+  def im_filed_resultViewDtos(dtos: ScaffoldDtos) : String = default_im_resultViewDtos(dtos).head.toLower + default_im_resultViewDtos(dtos).tail
   val ag_filed_exceptionDtos  : String = default_ag_exceptionDtos .head.toLower + default_ag_exceptionDtos .tail
   val im_filed_exceptionDtos  : String = default_im_exceptionDtos .head.toLower + default_im_exceptionDtos .tail
   val ag_filed_const          : String = default_ag_const         .head.toLower + default_ag_const         .tail
@@ -160,8 +160,8 @@ trait ValetConst {
   val ag_filed_auditService   : String = default_ag_auditService  .head.toLower + default_ag_auditService  .tail
   val im_filed_auditService   : String = default_im_auditService  .head.toLower + default_im_auditService  .tail
 
-  val pkg_ag_ResultViewDtos: String = pkg_model_dto_ag    + "." + default_ag_resultViewDtos
-  val pkg_im_ResultViewDtos: String = pkg_model_dto_im    + "." + default_im_resultViewDtos
+  def pkg_ag_ResultViewDtos(dtos: ScaffoldDtos): String = pkg_model_dto_ag    + "." + default_ag_resultViewDtos(dtos)
+  def pkg_im_ResultViewDtos(dtos: ScaffoldDtos): String = pkg_model_dto_im    + "." + default_im_resultViewDtos(dtos)
   val pkg_ag_ExceptionDtos : String = pkg_model_dto_ag    + "." + default_ag_exceptionDtos
   val pkg_im_ExceptionDtos : String = pkg_model_dto_im    + "." + default_im_exceptionDtos
   val pkg_ag_Const         : String = pkg_common_util_ag   + "." + default_ag_const
@@ -179,8 +179,8 @@ trait ValetConst {
   val pkg_ag_AuditService  : String = pkg_model_service_ag + "." + default_ag_auditService
   val pkg_im_AuditService  : String = pkg_model_service_im + "." + default_im_auditService
 
-  val path_ag_ResultViewDtos: String = path_model_dto_ag    + "/" +  default_ag_resultViewDtos
-  val path_im_ResultViewDtos: String = path_model_dto_im    + "/" +  default_im_resultViewDtos
+  def path_ag_ResultViewDtos(dtos: ScaffoldDtos): String = path_model_dto_ag    + "/" +  default_ag_resultViewDtos(dtos)
+  def path_im_ResultViewDtos(dtos: ScaffoldDtos): String = path_model_dto_im    + "/" +  default_im_resultViewDtos(dtos)
   val path_ag_ExceptionDtos : String = path_model_dto_ag    + "/" +  default_ag_exceptionDtos
   val path_im_ExceptionDtos : String = path_model_dto_im    + "/" +  default_im_exceptionDtos
   val path_ag_Const         : String = path_common_util_ag   + "/" +  default_ag_const

@@ -17,7 +17,7 @@ object ScaffoldForm extends ValetProcessCycle with ValetUtility {
     // by table
     dtos.generatedTables.foreach { nowTable =>
       val isScaffoldList: Seq[String] = getIsScaffoldList(dtos, nowTable)
-      if (isScaffoldList.contains(valetconf_isscaffoldlist_controller)) {
+      if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         forceWrite(s"$path_form_ag/${getAgForm(nowTable)}.scala", DefForm.getAll(nowTable, dtos))
       }
     }

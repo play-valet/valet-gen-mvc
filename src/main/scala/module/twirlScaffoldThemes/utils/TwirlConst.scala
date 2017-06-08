@@ -2,7 +2,7 @@ package module.twirlScaffoldThemes.utils
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.valet.common.{ScaffoldDtos, ValetUtility}
+import org.valet.common.{GeneratedTable, ScaffoldDtos, ValetUtility}
 
 trait FormsRegex {
   val REGEX_NUM = """\d*"""
@@ -20,17 +20,21 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
   val METHOD_STORE = "store"
   val METHOD_UPDATE = "update"
   val METHOD_DESTROY = "destroy"
-
   val DIV_TAG = "<div></div>"
   val TR_TAG = "<tr></tr>"
-
-
   val CRUD_TEMPLATE_DIR = "crud_template"
-  val FRAME_BASIC_SCALA_HTML = "frame_basic.scala.html"
-
   val ROW_PARAM = "row"
   val DTO_PARAM = "vdto"
   val IMPORT_MESSAGES_VARIABLE = "mI18n"
+  val FORM_PREFIX = "ScaffoldForm"
+
+//  def getEditFieldForm(nowTable: GeneratedTable): String = s"""ag${getTableName(nowTable)}EditForm"""
+//  def getCreateFieldForm(nowTable: GeneratedTable): String = s"""ag${getTableName(nowTable)}CreateForm"""
+
+  def getRouteController(nowTable: GeneratedTable): String = pkg_controller_ag + s".routes.${getAgTableName(nowTable)}Controller"
+
+  def getEditSubmitFormName(nowTable: GeneratedTable): String = "edit" + FORM_PREFIX + getTableName(nowTable)
+  def getCreateSubmitFormName(nowTable: GeneratedTable): String = "create" + FORM_PREFIX + getTableName(nowTable)
 
   def getButtonI18nCode(str: String): String = {
     str match {
