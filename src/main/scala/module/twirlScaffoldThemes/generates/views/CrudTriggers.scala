@@ -3,9 +3,9 @@ package module.twirlScaffoldThemes.generates.views
 import module.twirlScaffoldThemes.utils.{CustomJsoupElement, TwirlConst, Valiables}
 import org.valet.common.GeneratedColumn
 
-object CreateCrud extends CrudUtils {
+object CrudTriggers extends CrudCommons {
 
-  def actTriggerField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
+  def actTriggerCreateField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
     for {
       (column, i) <- TwirlLogic.getUseColumn(ves).zipWithIndex
     } yield {
@@ -31,7 +31,7 @@ object CreateCrud extends CrudUtils {
     dto.removeElement(CLASS_SCAFFOLD_CREATE_ITERATOR)
   }
 
-  def actTriggerLogic(dto: CustomJsoupElement, ves: Valiables): String = {
+  def actTriggerCreateLogic(dto: CustomJsoupElement, ves: Valiables): String = {
     val tableName = getTableName(ves.nowTable.get)
     // TODO: PARENTが付いている場合には、その親要素の部分にTwirlコードを付与するといった使い方を実現したい。
     // TODO: CHILDが付いている場合には、その子要素の部分にTwirlコードを付与するといった使い方を実現したい。
@@ -57,11 +57,8 @@ object CreateCrud extends CrudUtils {
     }.mkString("\n")
   }
 
-}
 
-object EditCrud extends CrudUtils {
-
-  def actTriggerField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
+  def actTriggerEditField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
     for {
       (column, i) <- TwirlLogic.getUseColumn(ves).zipWithIndex
     } yield {
@@ -77,7 +74,7 @@ object EditCrud extends CrudUtils {
               .replaceTextContent(CLASS_SCAFFOLD_EDIT_FIELD, column.columnName)
               // 表示用 primary id
               .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_EDIT_VALUE, getTagDefault("span", None))
-              .replaceTextContent(CLASS_SCAFFOLD_EDIT_VALUE, getCreateFieldValue(column, ves))
+              .replaceTextContent(CLASS_SCAFFOLD_EDIT_VALUE, getEditFieldValue(column, ves))
               .removeAttr("type")
               .removeAttr("value")
               .removeAttr("name")
@@ -86,7 +83,7 @@ object EditCrud extends CrudUtils {
               .addAfterSearched(CLASS_SCAFFOLD_EDIT_VALUE,
               getTagDefault("input-hidden",
                 Some(Map(
-                  "value" -> getCreateFieldValue(column, ves),
+                  "value" -> getEditFieldValue(column, ves),
                   "name" -> toSnakeCase(column.columnName)
                 ))))
 
@@ -113,7 +110,7 @@ object EditCrud extends CrudUtils {
     dto.removeElement(CLASS_SCAFFOLD_EDIT_ITERATOR)
   }
 
-  def actTriggerLogic(dto: CustomJsoupElement, ves: Valiables): String = {
+  def actTriggerEditLogic(dto: CustomJsoupElement, ves: Valiables): String = {
     val tableName = getTableName(ves.nowTable.get)
     // TODO: PARENTが付いている場合には、その親要素の部分にTwirlコードを付与するといった使い方を実現したい。
     // TODO: CHILDが付いている場合には、その子要素の部分にTwirlコードを付与するといった使い方を実現したい。
@@ -137,10 +134,8 @@ object EditCrud extends CrudUtils {
       case ln                                          => ln
     }.mkString("\n")
   }
-}
 
-object ListCrud extends CrudUtils {
-  def actTriggerField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
+  def actTriggerListField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
     for {
       (column, _) <- TwirlLogic.getUseColumn(ves).zipWithIndex
     } yield {
@@ -160,7 +155,7 @@ object ListCrud extends CrudUtils {
     dto.removeElement(CLASS_SCAFFOLD_LIST_ITERATOR)
   }
 
-  def actTriggerLogic(dto: CustomJsoupElement, ves: Valiables): String = {
+  def actTriggerListLogic(dto: CustomJsoupElement, ves: Valiables): String = {
     // TODO: PARENTが付いている場合には、その親要素の部分にTwirlコードを付与するといった使い方を実現したい。
     // TODO: CHILDが付いている場合には、その子要素の部分にTwirlコードを付与するといった使い方を実現したい。
     val rowIterator = dto.scopeRoot.scopeClosestElement(".SCAFFOLD_LIST_LOGIC_ROWS--PARENT")
@@ -179,9 +174,7 @@ object ListCrud extends CrudUtils {
       case ln                                          => ln
     }.mkString("\n")
   }
-}
 
-object ButtonCrud extends CrudUtils {
   def actTriggerButton(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
     val btnList = Seq(
       SCAFFOLD_LIST_BTN_SHOW_CREATE,
@@ -208,7 +201,7 @@ object ButtonCrud extends CrudUtils {
 
 }
 
-trait CrudUtils extends TwirlConst {
+trait CrudCommons extends TwirlConst {
 
   def getPrimaryKeySyntaxTypeInt(ves: Valiables): String = {
     val primaryKeyFieldName = ves.nowTable.flatMap(_.columnList.headOption).map(_.columnName).getOrElse("")

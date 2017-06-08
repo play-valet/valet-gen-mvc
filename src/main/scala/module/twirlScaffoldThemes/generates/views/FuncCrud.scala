@@ -65,21 +65,21 @@ object FuncCrud extends TwirlConst {
       // 今回はfile名で切り分けるという逃げで対処。
       ves.file.get.getName.split('.').headOption.getOrElse("") match {
         case "create" =>
-          CreateCrud.actTriggerField(dto, ves)
-          ButtonCrud.actTriggerButton(dto, ves)
-          CreateCrud.actTriggerLogic(dto, ves).replace("&quot;", "\"") + "\n"
+          CrudTriggers.actTriggerCreateField(dto, ves)
+          CrudTriggers.actTriggerButton(dto, ves)
+          CrudTriggers.actTriggerCreateLogic(dto, ves).replace("&quot;", "\"") + "\n"
         case "edit"   =>
-          EditCrud.actTriggerField(dto, ves)
-          ButtonCrud.actTriggerButton(dto, ves)
-          EditCrud.actTriggerLogic(dto, ves).replace("&quot;", "\"") + "\n"
+          CrudTriggers.actTriggerEditField(dto, ves)
+          CrudTriggers.actTriggerButton(dto, ves)
+          CrudTriggers.actTriggerEditLogic(dto, ves).replace("&quot;", "\"") + "\n"
         case "detail" =>
-          ListCrud.actTriggerField(dto, ves)
-          ButtonCrud.actTriggerButton(dto, ves)
-          ListCrud.actTriggerLogic(dto, ves).replace("&quot;", "\"") + "\n"
+          CrudTriggers.actTriggerEditField(dto, ves)
+          CrudTriggers.actTriggerButton(dto, ves)
+          CrudTriggers.actTriggerEditLogic(dto, ves).replace("&quot;", "\"") + "\n"
         case "list"   =>
-          ListCrud.actTriggerField(dto, ves)
-          ButtonCrud.actTriggerButton(dto, ves)
-          ListCrud.actTriggerLogic(dto, ves).replace("&quot;", "\"") + "\n"
+          CrudTriggers.actTriggerListField(dto, ves)
+          CrudTriggers.actTriggerButton(dto, ves)
+          CrudTriggers.actTriggerListLogic(dto, ves).replace("&quot;", "\"") + "\n"
         case _        => text
       }
     } else {
