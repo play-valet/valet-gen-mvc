@@ -28,7 +28,7 @@ object DefApplicationConf extends ValetUtility {
 //    writeAppending(new File(filepath), content)
 //  }
 
-  def addConf(dtos: ScaffoldDtos) = {
+  def addConf(dtos: ScaffoldDtos): Unit = {
     val applicationConfFilePath = "./conf/application.conf"
     val targetKeyList = Seq(
       ("slick.dbs.default.db.driver","""slick.dbs.default.driver = "slick.driver.MySQLDriver$" """)
@@ -41,13 +41,11 @@ object DefApplicationConf extends ValetUtility {
     makeFileIfNotExist(new File(applicationConfFilePath))
     val conf: Config = ConfigFactory.parseFile(new File(applicationConfFilePath))
     val keyList = Loaders.getKeyListFromHocon(conf)
-    val addList = targetKeyList.filter(x => !keyList.contains(x._1))
+    val addList = targetKeyList.filter(x => !keyList.contains(x._1)).map(_._2).mkString("\n")
 
     if (addList.nonEmpty) {
       writeAppending(new File(applicationConfFilePath), "\n")
-      addList.foreach { addrow =>
-        writeAppending(new File(applicationConfFilePath), addrow._2)
-      }
+      writeAppending(new File(applicationConfFilePath), addList)
     }
   }
 
