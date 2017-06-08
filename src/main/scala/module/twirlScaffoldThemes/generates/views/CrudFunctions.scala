@@ -211,7 +211,7 @@ trait CrudUtils extends TwirlConst {
 
   def getCreateFormParam(ves: Valiables): String = s"""ag${getTableName(ves.nowTable.get)}CreateForm"""
 
-  def getRouteController(ves: Valiables): String = pkg_controller_ag + s".routes.${getTableName(ves.nowTable.get)}Controller"
+  def getRouteController(ves: Valiables): String = pkg_controller_ag + s".routes.${getAgTableName(ves.nowTable.get)}Controller"
 
   def getEditSubmitFormName(ves: Valiables): String = "edit" + FORM_PREFIX + getTableName(ves.nowTable.get)
 
@@ -256,18 +256,6 @@ trait CrudUtils extends TwirlConst {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {
       "@{" + DTO_PARAM + "." + getCreateFormParam(ves) + "(\"" + toSnakeCase(column.columnName) + "\").value}"
-      //      s"@$DTO_PARAM.${getCreateFormParam(ves)}(\"${toSnakeCase(column.columnName)}\").value"
-
-
-      //      column.columnType match {
-      //        case "Int"                        => s"""@$DTO_PARAM.$dtoName.map(_.${column.columnName}).getOrElse("")"""
-      //        case "Option[Int]"                => s"""@$DTO_PARAM.$dtoName.flatMap(_.${column.columnName}).getOrElse("")"""
-      //        case "String"                     => s"""@$DTO_PARAM.$dtoName.map(_.${column.columnName}).getOrElse("")"""
-      //        case "Option[String]"             => s"""@$DTO_PARAM.$dtoName.flatMap(_.${column.columnName}).getOrElse("")"""
-      //        case "java.sql.Timestamp"         => s"""@$DTO_PARAM.$dtoName.map(_.${column.columnName}).getOrElse("")"""
-      //        case "Option[java.sql.Timestamp]" => s"""@$DTO_PARAM.$dtoName.flatMap(_.${column.columnName}).getOrElse("")"""
-      //        case _                            => s"""@$DTO_PARAM.$dtoName.map(_.${column.columnName}).getOrElse("")"""
-      //      }
     } else {
       ""
     }

@@ -55,10 +55,6 @@ object FuncCrud extends TwirlConst {
   }
 
   def processPlainImpl(text: String, ves: Valiables): String = {
-    adjustCrudDSL(text, ves)
-  }
-
-  private def adjustCrudDSL(text: String, ves: Valiables): String = {
     val dirName = ves.file.get.getParentFile.getName
     if (!text.trim.replaceAll("\n", "").isEmpty && dirName == CRUD_TEMPLATE_DIR) {
       val dto = CustomJsoupElement(Jsoup.parse(text))
