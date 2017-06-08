@@ -26,15 +26,13 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
   val ROW_PARAM = "row"
   val DTO_PARAM = "vdto"
   val IMPORT_MESSAGES_VARIABLE = "mI18n"
-  val FORM_PREFIX = "ScaffoldForm"
 
-//  def getEditFieldForm(nowTable: GeneratedTable): String = s"""ag${getTableName(nowTable)}EditForm"""
-//  def getCreateFieldForm(nowTable: GeneratedTable): String = s"""ag${getTableName(nowTable)}CreateForm"""
+  val SUBMIT_FORM = "SubmitForm"
 
   def getRouteController(nowTable: GeneratedTable): String = pkg_controller_ag + s".routes.${getAgTableName(nowTable)}Controller"
 
-  def getEditSubmitFormName(nowTable: GeneratedTable): String = "edit" + FORM_PREFIX + getTableName(nowTable)
-  def getCreateSubmitFormName(nowTable: GeneratedTable): String = "create" + FORM_PREFIX + getTableName(nowTable)
+  def getEditSubmitFormName(nowTable: GeneratedTable): String = "edit" + SUBMIT_FORM + getTableName(nowTable)
+  def getCreateSubmitFormName(nowTable: GeneratedTable): String = "create" + SUBMIT_FORM + getTableName(nowTable)
 
   def getButtonI18nCode(str: String): String = {
     str match {

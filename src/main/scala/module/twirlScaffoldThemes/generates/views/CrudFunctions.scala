@@ -7,22 +7,26 @@ object CreateCrud extends CrudUtils {
 
   def actTriggerField(dto: CustomJsoupElement, ves: Valiables): CustomJsoupElement = {
     for {
-      (column, _) <- TwirlLogic.getUseColumn(ves).zipWithIndex
+      (column, i) <- TwirlLogic.getUseColumn(ves).zipWithIndex
     } yield {
-      dto
-        .scopeClosestElements(CLASS_SCAFFOLD_CREATE_ITERATOR) { element =>
-          CustomJsoupElement(element)
-            // 自身を複製。複製したものは取っておいて、今のものに対して処理を行うことでリスト処理を実現する。わかりづらいので注意。
-            .copySelfAfter
-            .removeAttrValue("class", SCAFFOLD_CREATE_ITERATOR)
-            // 処理開始
-            .replaceTextContent(CLASS_SCAFFOLD_CREATE_FIELD, column.columnName)
-            .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_CREATE_VALUE, getTagDefault("input-text", None))
-            .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "value", "")
-            .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "name", toSnakeCase(column.columnName))
-            .removeAttrValue("class", SCAFFOLD_CREATE_VALUE, CLASS_SCAFFOLD_CREATE_VALUE)
-            .removeAttrValue("class", SCAFFOLD_CREATE_FIELD, CLASS_SCAFFOLD_CREATE_FIELD)
-        }
+      if(i == 0) {
+
+      } else {
+        dto
+          .scopeClosestElements(CLASS_SCAFFOLD_CREATE_ITERATOR) { element =>
+            CustomJsoupElement(element)
+              // 自身を複製。複製したものは取っておいて、今のものに対して処理を行うことでリスト処理を実現する。わかりづらいので注意。
+              .copySelfAfter
+              .removeAttrValue("class", SCAFFOLD_CREATE_ITERATOR)
+              // 処理開始
+              .replaceTextContent(CLASS_SCAFFOLD_CREATE_FIELD, column.columnName)
+              .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_CREATE_VALUE, getTagDefault("input-text", None))
+              .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "value", "")
+              .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "name", toSnakeCase(column.columnName))
+              .removeAttrValue("class", SCAFFOLD_CREATE_VALUE, CLASS_SCAFFOLD_CREATE_VALUE)
+              .removeAttrValue("class", SCAFFOLD_CREATE_FIELD, CLASS_SCAFFOLD_CREATE_FIELD)
+          }
+      }
     }
     dto.removeElement(CLASS_SCAFFOLD_CREATE_ITERATOR)
   }
@@ -36,7 +40,7 @@ object CreateCrud extends CrudUtils {
     dto
       .scopeClosestElement(CLASS_SCAFFOLD_CREATE_LOGIC_FORM)
       .renameTag(CUSTOM_TAG)
-      .replaceAttr(CUSTOM_TAG, "name", getAgCreateFieldForm(ves.nowTable.get))
+      .replaceAttr(CUSTOM_TAG, "name", getCreateSubmitFormName(ves.nowTable.get))
       .removeAttrValue("class", SCAFFOLD_CREATE_LOGIC_FORM)
 
     // custom tag replace 処理
@@ -46,6 +50,7 @@ object CreateCrud extends CrudUtils {
           dto
             .scopeRoot
             .scopeClosestElement(CUSTOM_TAG).getAttr.map(x =>s""" '${x._1} -> "${x._2}"""").mkString(",")
+
         s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_STORE(), $formAttr) {""".stripMargin
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"}".stripMargin
       case ln                                          => ln
@@ -117,7 +122,7 @@ object EditCrud extends CrudUtils {
     dto
       .scopeClosestElement(CLASS_SCAFFOLD_EDIT_LOGIC_FORM)
       .renameTag(CUSTOM_TAG)
-      .replaceAttr(CUSTOM_TAG, "name", getAgEditFieldForm(ves.nowTable.get))
+      .replaceAttr(CUSTOM_TAG, "name", getCreateSubmitFormName(ves.nowTable.get))
       .removeAttrValue("class", SCAFFOLD_EDIT_LOGIC_FORM)
 
     // custom tag replace 処理
