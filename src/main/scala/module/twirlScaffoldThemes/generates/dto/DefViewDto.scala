@@ -7,7 +7,9 @@ object DefViewDto extends ValetUtility {
   def getAll(dtos: ScaffoldDtos): String = {
     s"""package $pkg_model_dto_ag
        |
+       |import $pkg_form_ag._
        |import $pkg_model_tables_ag.$default_TABLES_NAME._
+       |import play.api.data.Form
        |
        |case class ${default_ag_resultViewDtos(dtos)}(
        |                    account: Option[String]
@@ -33,8 +35,7 @@ object DefViewDto extends ValetUtility {
       if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         s"""|                    ,${getAgCreateFieldForm(nowTable)}: Form[${getAgCreateForm(nowTable)}] = $pkg_form_ag.${getObj(getAgCreateForm(nowTable))}.${getAgCreateFieldForm(nowTable)}
             |                    ,${getAgEditFieldForm(nowTable)}: Form[${getAgEditForm(nowTable)}] = $pkg_form_ag.${getObj(getAgEditForm(nowTable))}.${getAgEditFieldForm(nowTable)}
-            |                 // ,${getTableFieldName(nowTable)}Dto:  Option[${getTableName(nowTable)}] = None
-            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${getTableName(nowTable)}] = Seq()""".stripMargin
+            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${nowTable.tableName}] = Seq()""".stripMargin
       } else {
         ""
       }
@@ -47,8 +48,7 @@ object DefViewDto extends ValetUtility {
       if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         s"""|                    ,${getAgCreateFieldForm(nowTable)}: Form[${getAgCreateForm(nowTable)}] = this.${getAgCreateFieldForm(nowTable)}
             |                    ,${getAgEditFieldForm(nowTable)}: Form[${getAgEditForm(nowTable)}] = this.${getAgEditFieldForm(nowTable)}
-            |                 // ,${getTableFieldName(nowTable)}Dto:  Option[${getTableName(nowTable)}] = this.${getTableFieldName(nowTable)}
-            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${getTableName(nowTable)}] = this.${getTableFieldName(nowTable)}""".stripMargin
+            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${nowTable.tableName}] = this.${getTableFieldName(nowTable)}DtoList""".stripMargin
       } else {
         ""
       }
@@ -61,7 +61,6 @@ object DefViewDto extends ValetUtility {
       if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         s"""|                    ,${getAgCreateFieldForm(nowTable)}
             |                    ,${getAgEditFieldForm(nowTable)}
-            |                 // ,${getTableFieldName(nowTable)}Dto
             |                    ,${getTableFieldName(nowTable)}DtoList""".stripMargin
       } else {
         ""
