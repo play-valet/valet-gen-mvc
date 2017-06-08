@@ -35,7 +35,7 @@ object DefViewDto extends ValetUtility {
       if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         s"""|                    ,${getAgCreateFieldForm(nowTable)}: Form[${getAgCreateForm(nowTable)}] = $pkg_form_ag.${getObj(getAgCreateForm(nowTable))}.${getAgCreateFieldForm(nowTable)}
             |                    ,${getAgEditFieldForm(nowTable)}: Form[${getAgEditForm(nowTable)}] = $pkg_form_ag.${getObj(getAgEditForm(nowTable))}.${getAgEditFieldForm(nowTable)}
-            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${nowTable.tableName}] = Seq()""".stripMargin
+            |                    ,${getAgDtoFieldList(nowTable)}: Seq[${nowTable.tableName}] = Seq()""".stripMargin
       } else {
         ""
       }
@@ -48,7 +48,7 @@ object DefViewDto extends ValetUtility {
       if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         s"""|                    ,${getAgCreateFieldForm(nowTable)}: Form[${getAgCreateForm(nowTable)}] = this.${getAgCreateFieldForm(nowTable)}
             |                    ,${getAgEditFieldForm(nowTable)}: Form[${getAgEditForm(nowTable)}] = this.${getAgEditFieldForm(nowTable)}
-            |                    ,${getTableFieldName(nowTable)}DtoList: Seq[${nowTable.tableName}] = this.${getTableFieldName(nowTable)}DtoList""".stripMargin
+            |                    ,${getAgDtoFieldList(nowTable)}: Seq[${nowTable.tableName}] = this.${getAgDtoFieldList(nowTable)}""".stripMargin
       } else {
         ""
       }
@@ -61,7 +61,7 @@ object DefViewDto extends ValetUtility {
       if (isScaffoldList.contains(VALETCONF_ISSCAFFOLDLIST_CONTROLLER)) {
         s"""|                    ,${getAgCreateFieldForm(nowTable)}
             |                    ,${getAgEditFieldForm(nowTable)}
-            |                    ,${getTableFieldName(nowTable)}DtoList""".stripMargin
+            |                    ,${getAgDtoFieldList(nowTable)}""".stripMargin
       } else {
         ""
       }

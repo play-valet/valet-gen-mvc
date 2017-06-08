@@ -1,5 +1,6 @@
 package module.twirlScaffoldThemes.utils
 
+import module.twirlScaffoldThemes.generates.views.TwirlScaffoldView.getDirFileList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.valet.common.{GeneratedTable, ScaffoldDtos, ValetUtility}
@@ -13,13 +14,6 @@ trait FormsRegex {
 
 trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
 
-  val METHOD_SHOWINDEX = "showIndex"
-  val METHOD_SHOWDETAIL = "showDetail"
-  val METHOD_SHOWCREATE = "showCreate"
-  val METHOD_SHOWEDIT = "showEdit"
-  val METHOD_STORE = "store"
-  val METHOD_UPDATE = "update"
-  val METHOD_DESTROY = "destroy"
   val DIV_TAG = "<div></div>"
   val TR_TAG = "<tr></tr>"
   val CRUD_TEMPLATE_DIR = "crud_template"
@@ -30,7 +24,6 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
   val SUBMIT_FORM = "SubmitForm"
 
   def getRouteController(nowTable: GeneratedTable): String = pkg_controller_ag + s".routes.${getAgTableName(nowTable)}Controller"
-
   def getEditSubmitFormName(nowTable: GeneratedTable): String = "edit" + SUBMIT_FORM + getTableName(nowTable)
   def getCreateSubmitFormName(nowTable: GeneratedTable): String = "create" + SUBMIT_FORM + getTableName(nowTable)
 
@@ -60,6 +53,7 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
     val gitPathBackendAdminPath = dtos.confDto.modulesTwirlScaffoldThemesSourceBackendAdmin
     val gitProjectName: String = gitPathBackendAdminPath.split("/").last.dropRight(4)
     val snakeCase = toSnakeCase(gitProjectName.replaceAll("-", "_"))
+
     TwirlPathDto(
       projectName = gitProjectName,
       snakeCase = snakeCase,
@@ -76,7 +70,8 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
       app_assets_project = s"./app/assets/$snakeCase",
       app_views = s"./app/views",
       app_views_autogen = s"./app/views/autogen",
-      app_views_autogen_project = s"./app/views/autogen/$snakeCase"
+      app_views_autogen_project = s"./app/views/autogen/$snakeCase",
+      pkg_views_autogen_crud_dir = getDirFileList(s"./app/views/autogen/$snakeCase", Seq()).find(file => file.isFile && file.getParentFile.getName == CRUD_TEMPLATE_DIR).map(file => file.getParentFile.getPath.replace("./app/views/", "").replace("/", ".").split('.').init.mkString(".")).getOrElse("")
     )
   }
 

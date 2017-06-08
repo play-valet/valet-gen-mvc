@@ -10,13 +10,12 @@ import org.valet.common._
 object TwirlScaffoldView extends ValetProcessCycle with TwirlConst {
 
   override def initAction(dtos: ScaffoldDtos): Unit = {
-
+    val pathDto: TwirlPathDto = getTwirlPathDto(dtos)
+    arrange(pathDto)
   }
 
   override def mainAction(dtos: ScaffoldDtos): Unit = {
     val pathDto: TwirlPathDto = getTwirlPathDto(dtos)
-    arrange(pathDto)
-
     val fileList: Seq[File] = getDirFileList(pathDto.app_views_autogen_project, Seq()).filter(_.isFile)
     adjustTemplateViewToNowProject(fileList, dtos, pathDto)
   }

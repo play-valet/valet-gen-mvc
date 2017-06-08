@@ -1,93 +1,95 @@
 package module.twirlScaffoldThemes.generates.controller
 
+import module.twirlScaffoldThemes.utils.{TwirlConst, TwirlPathDto}
 import org.valet.common._
 
-object DefTwirl_ASync_Controller extends ValetUtility  {
+object DefTwirl_ASync_Controller extends TwirlConst  {
 
-  def getAll(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
-    s"""|package controllers.autogen
+  def getAllByResultDto(nowTable: GeneratedTable, dtos: ScaffoldDtos, pathDto: TwirlPathDto): String = {
+
+    s"""|package $pkg_controller_ag
         |
         |import javax.inject._
         |
-        |import common.implement.utils.Const
-        |import forms.autogen.AgMappingPostsForm
-        |import forms.autogen.AgPostsCreateFormObj.agPostsCreateForm
-        |import forms.autogen.AgPostsEditFormObj.agPostsEditForm
-        |import models.autogen.daos.AgPostsDaoLike
-        |import models.autogen.dtos.AgResultDtos
+        |import $pkg_common_util_im.$default_im_const
+        |import $pkg_form_ag.${getAgMappingForm(nowTable)}
+        |import $pkg_form_ag.${getObj(getAgCreateForm(nowTable))}.${getAgCreateFieldForm(nowTable)}
+        |import $pkg_form_ag.${getObj(getAgEditForm(nowTable))}.${getAgEditFieldForm(nowTable)}
+        |import $pkg_model_dao_ag.${getAgDaoLike(nowTable)}
+        |import $pkg_model_dto_ag.${default_ag_resultViewDtos(dtos)}
         |import play.api.i18n.{I18nSupport, MessagesApi}
         |import play.api.mvc._
-        |import views.html.autogen.simple_admin._
+        |import views.html.${pathDto.pkg_views_autogen_crud_dir}._
         |
         |import scala.concurrent.{ExecutionContext, Future}
         |
         |@Singleton
-        |class AgPostsController @Inject()(val agPostsDao: AgPostsDaoLike,
+        |class ${getAgController(nowTable)} @Inject()(val ${getFieldAgDao(nowTable)}: ${getAgDaoLike(nowTable)},
         |                                  val messagesApi: MessagesApi)(implicit executor: ExecutionContext)
-        |  extends Controller with Const with I18nSupport {
+        |  extends Controller with $default_im_const with I18nSupport {
         |
-        |  def showIndex = Action.async { implicit request =>
-        |    agPostsDao.all.map { result =>
-        |      Ok(posts.list(AgResultDtos(None, postsDtoList = result)))
+        |  def $METHOD_CONTRL_SHOWINDEX = Action.async { implicit request =>
+        |    ${getFieldAgDao(nowTable)}.$METHOD_DAO_ALL.map { result =>
+        |      Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_LIST(${default_ag_resultViewDtos(dtos)}(None, ${getAgDtoFieldList(nowTable)}} = result)))
         |    }.recover {
         |      case _ => InternalServerError
         |    }
         |  }
         |
-        |  def showDetail(id: Int) = Action.async { implicit request =>
-        |    agPostsDao.findById(id).map {
-        |      case Some(result) => Ok(posts.detail(AgResultDtos(None, agPostsEditForm = AgMappingPostsForm.toEditForm(id, result))))
-        |      case None         => Redirect(routes.AgPostsController.showIndex())
+        |  def $METHOD_CONTRL_SHOWDETAIL(id: Int) = Action.async { implicit request =>
+        |    ${getFieldAgDao(nowTable)}.$METHOD_DAO_FIND(id).map {
+        |      case Some(result) => Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_DETAIL(${default_ag_resultViewDtos(dtos)}(None, ${getAgEditFieldForm(nowTable)} = ${getAgMappingForm(nowTable)}.toEditForm(id, result))))
+        |      case None         => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX())
         |    }.recover {
-        |      case _ => Redirect(routes.AgPostsController.showIndex())
+        |      case _ => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX())
         |    }
         |  }
         |
-        |  def showCreate = Action.async { implicit request =>
-        |    Future.successful(Ok(posts.create(AgResultDtos(None))))
+        |  def $METHOD_CONTRL_SHOWCREATE = Action.async { implicit request =>
+        |    Future.successful(Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_CREATE(${default_ag_resultViewDtos(dtos)}(None))))
         |  }
         |
-        |  def store = Action.async { implicit request =>
-        |    agPostsCreateForm.bindFromRequest.fold(
+        |  def $METHOD_CONTRL_STORE = Action.async { implicit request =>
+        |    ${getAgCreateFieldForm(nowTable)}.bindFromRequest.fold(
         |      errorForm =>
-        |        Future.successful(Ok(posts.create(AgResultDtos(None, agPostsCreateForm = errorForm)))),
+        |        Future.successful(Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_CREATE(${default_ag_resultViewDtos(dtos)}(None, ${getAgCreateFieldForm(nowTable)} = errorForm)))),
         |      form => {
-        |        agPostsDao.store(AgMappingPostsForm.toEntity(form)).map { result =>
-        |          Redirect(routes.AgPostsController.showIndex()).flashing(AG_SUCCESS -> messagesApi(SUCCESS_CREATE))
+        |        ${getFieldAgDao(nowTable)}.$METHOD_DAO_STORE(${getAgMappingForm(nowTable)}.toEntity(form)).map { result =>
+        |          Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_SUCCESS -> messagesApi(SUCCESS_CREATE))
         |        }.recover {
-        |          case _ => Redirect(routes.AgPostsController.showIndex()).flashing(AG_ERROR -> messagesApi(ERROR_CREATE_BY_DB))
+        |          case _ => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_ERROR -> messagesApi(ERROR_CREATE_BY_DB))
         |        }
         |      })
         |  }
         |
-        |  def showEdit(id: Int) = Action.async { implicit request =>
-        |    agPostsDao.findById(id).map {
-        |      case Some(result) => Ok(posts.edit(AgResultDtos(None, agPostsEditForm = AgMappingPostsForm.toEditForm(id, result))))
-        |      case None         => Redirect(routes.AgPostsController.showIndex()).flashing(AG_ERROR -> messagesApi(ERROR_CREATE_BY_DB))
+        |  def $METHOD_CONTRL_SHOWEDIT(id: Int) = Action.async { implicit request =>
+        |    ${getFieldAgDao(nowTable)}.$METHOD_DAO_FIND(id).map {
+        |      case Some(result) => Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_EDIT(${default_ag_resultViewDtos(dtos)}(None, ${getAgEditFieldForm(nowTable)} = ${getAgMappingForm(nowTable)}.toEditForm(id, result))))
+        |      case None         => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_ERROR -> messagesApi(ERROR_CREATE_BY_DB))
         |    }.recover {
-        |      case _ => Redirect(routes.AgPostsController.showIndex()).flashing(AG_ERROR -> messagesApi(ERROR_CREATE_BY_DB))
+        |      case _ => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_ERROR -> messagesApi(ERROR_CREATE_BY_DB))
         |    }
         |  }
         |
-        |  def update(id: Int) = Action.async { implicit request =>
-        |    agPostsEditForm.bindFromRequest.fold(
+        |  def $METHOD_CONTRL_UPDATE(id: Int) = Action.async { implicit request =>
+        |    ${getAgEditFieldForm(nowTable)}.bindFromRequest.fold(
         |      errorForm => {
-        |        Future.successful(Ok(posts.edit(AgResultDtos(None, agPostsEditForm = errorForm))))
+        |        Future.successful(Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_EDIT(${default_ag_resultViewDtos(dtos)}(None, ${getAgEditFieldForm(nowTable)} = errorForm))))
         |      },
         |      form => {
-        |        agPostsDao.edit(AgMappingPostsForm.toEntity(id, form)).map { result =>
-        |          Redirect(routes.AgPostsController.showIndex()).flashing(AG_SUCCESS -> messagesApi(SUCCESS_UPDATE))
+        |        ${getFieldAgDao(nowTable)}.$METHOD_DAO_EDIT(${getAgMappingForm(nowTable)}.toEntity(id, form)).map { result =>
+        |          Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_SUCCESS -> messagesApi(SUCCESS_UPDATE))
         |        }.recover {
-        |          case _ => Redirect(routes.AgPostsController.showIndex()).flashing(AG_ERROR -> messagesApi(ERROR_EDIT_BY_DB))
+        |          case _ => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_ERROR -> messagesApi(ERROR_EDIT_BY_DB))
         |        }
         |      })
         |  }
         |
-        |  def destroy(id: Int) = Action.async { implicit request =>
-        |    agPostsDao.delete(id).map { result =>
-        |      Redirect(routes.AgPostsController.showIndex()).flashing(AG_SUCCESS -> messagesApi(SUCCESS_DELETE))
+        |  def $METHOD_CONTRL_DESTROY(id: Int) = Action.async { implicit request =>
+        |    ${getFieldAgDao(nowTable)}.$METHOD_DAO_DELETE(id).map { result =>
+        |      Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_SUCCESS -> messagesApi(SUCCESS_DELETE))
         |    }.recover {
-        |      case _ => Redirect(routes.AgPostsController.showIndex()).flashing(AG_ERROR -> messagesApi(ERROR_DELETE_BY_DB))
+        |      case _ => Redirect(routes.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX()).flashing(AG_ERROR -> messagesApi(ERROR_DELETE_BY_DB))
         |    }
         |  }
         |

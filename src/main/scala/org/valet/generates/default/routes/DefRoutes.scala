@@ -8,13 +8,13 @@ import scala.io.Source
 
 object DefRoutes extends ValetUtility {
 
-  def strShowIndex (nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}                   $pkg_controller_ag.${getAgController(nowTable)}.showIndex"""
-  def strShowDetail(nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/detail/:id        $pkg_controller_ag.${getAgController(nowTable)}.showDetail(id:Int)"""
-  def strShowCreate(nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/store             $pkg_controller_ag.${getAgController(nowTable)}.showCreate"""
-  def strStore     (nowTable: GeneratedTable): String    = s"""POST        /${getTableName(nowTable).toLowerCase}/store             $pkg_controller_ag.${getAgController(nowTable)}.store"""
-  def strShowEdit  (nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/edit/:id          $pkg_controller_ag.${getAgController(nowTable)}.showEdit(id:Int)"""
-  def strUpdate    (nowTable: GeneratedTable): String    = s"""POST        /${getTableName(nowTable).toLowerCase}/edit/:id          $pkg_controller_ag.${getAgController(nowTable)}.update(id:Int)"""
-  def strDestroy   (nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/destroy/:id       $pkg_controller_ag.${getAgController(nowTable)}.destroy(id:Int)"""
+  def strShowIndex (nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}                   $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWINDEX"""
+  def strShowDetail(nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/detail/:id        $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWDETAIL(id:Int)"""
+  def strShowCreate(nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/store             $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWCREATE"""
+  def strStore     (nowTable: GeneratedTable): String    = s"""POST        /${getTableName(nowTable).toLowerCase}/store             $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_STORE"""
+  def strShowEdit  (nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/edit/:id          $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_SHOWEDIT(id:Int)"""
+  def strUpdate    (nowTable: GeneratedTable): String    = s"""POST        /${getTableName(nowTable).toLowerCase}/edit/:id          $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_UPDATE(id:Int)"""
+  def strDestroy   (nowTable: GeneratedTable): String    = s"""GET         /${getTableName(nowTable).toLowerCase}/destroy/:id       $pkg_controller_ag.${getAgController(nowTable)}.$METHOD_CONTRL_DESTROY(id:Int)"""
 
   def methodList(nowTable: GeneratedTable): Seq[String] = Seq(
     strShowIndex(nowTable),

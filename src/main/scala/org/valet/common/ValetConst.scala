@@ -2,11 +2,29 @@ package org.valet.common
 
 trait ValetConst {
 
-
   val VALETCONF_NO_VIEW_MODEL = "NO_VIEW_MODEL"
   val VALETCONF_ISSCAFFOLDLIST_DAO = "dao"
   val VALETCONF_ISSCAFFOLDLIST_SERVICE = "service"
   val VALETCONF_ISSCAFFOLDLIST_CONTROLLER = "controller"
+
+  val METHOD_CONTRL_SHOWINDEX = "showIndex"
+  val METHOD_CONTRL_SHOWDETAIL = "showDetail"
+  val METHOD_CONTRL_SHOWCREATE = "showCreate"
+  val METHOD_CONTRL_SHOWEDIT = "showEdit"
+  val METHOD_CONTRL_STORE = "store"
+  val METHOD_CONTRL_UPDATE = "update"
+  val METHOD_CONTRL_DESTROY = "destroy"
+
+  val METHOD_DAO_ALL = "all"
+  val METHOD_DAO_FIND = "findById"
+  val METHOD_DAO_STORE = "store"
+  val METHOD_DAO_EDIT = "edit"
+  val METHOD_DAO_DELETE = "delete"
+
+  val CRUD_FILENAME_CREATE = "create"
+  val CRUD_FILENAME_EDIT = "edit"
+  val CRUD_FILENAME_LIST = "list"
+  val CRUD_FILENAME_DETAIL = "detail"
 
   val autogenName = "autogen"
   val implementNm = "implement"
@@ -18,42 +36,44 @@ trait ValetConst {
   val suffixObject = "Obj"
   val suffixDao = "Dao"
   val suffixForm = "Form"
+  val suffixDto = "Dto"
+  val suffixDtoList = "DtoList"
   val suffixService = "Service"
   val suffixController = "Controller"
 
   val createFormStr = "Create"
   val editFormStr = "Edit"
 
-  val assets_ag             : String = "assets/" + autogenName + ""
-  val assets_im             : String = "assets/" + implementNm + ""
-  val common_ag             : String = "common/" + autogenName + ""
-  val common_im             : String = "common/" + implementNm + ""
-  val common_util_ag        : String = "common/" + autogenName + "/utils"
-  val common_util_im        : String = "common/" + implementNm + "/utils"
-  val common_auth_ag        : String = "common/" + autogenName + "/auth"
-  val common_auth_im        : String = "common/" + implementNm + "/auth"
-  val common_filter_ag      : String = "common/" + autogenName + "/filter"
-  val common_filter_im      : String = "common/" + implementNm + "/filter"
-  val controller_ag         : String = "controllers/" + autogenName + ""
-  val controller_im         : String = "controllers/" + implementNm + ""
-  val form_ag               : String = "forms/" + autogenName + ""
-  val form_im               : String = "forms/" + implementNm + ""
-  val model_ag              : String = "models/" + autogenName + ""
-  val model_im              : String = "models/" + implementNm + ""
-  val model_dao_ag          : String = "models/" + autogenName + "/daos"
-  val model_dao_im          : String = "models/" + implementNm + "/daos"
-  val model_dto_ag          : String = "models/" + autogenName + "/dtos"
-  val model_dto_im          : String = "models/" + implementNm + "/dtos"
-  val model_service_ag      : String = "models/" + autogenName + "/services"
-  val model_service_im      : String = "models/" + implementNm + "/services"
-  val model_tables_ag       : String = "models/" + autogenName + "/tables"
-  val model_tables_im       : String = "models/" + implementNm + "/tables"
-  val model_repositories_ag : String = "models/" + autogenName + "/repositories"
-  val model_repositories_im : String = "models/" + implementNm + "/repositories"
-  val model_logics_ag       : String = "models/" + autogenName + "/logics"
-  val model_logics_im       : String = "models/" + implementNm + "/logics"
-  val view_ag               : String = "views/" + autogenName + ""
-  val view_im               : String = "views/" + implementNm + ""
+  val assets_ag             : String = Seq("assets" , autogenName , "").filter(!_.isEmpty).mkString("/")
+  val assets_im             : String = Seq("assets" , implementNm , "").filter(!_.isEmpty).mkString("/")
+  val common_ag             : String = Seq("common" , autogenName , "").filter(!_.isEmpty).mkString("/")
+  val common_im             : String = Seq("common" , implementNm , "").filter(!_.isEmpty).mkString("/")
+  val common_util_ag        : String = Seq("common" , autogenName , "utils").filter(!_.isEmpty).mkString("/")
+  val common_util_im        : String = Seq("common" , implementNm , "utils").filter(!_.isEmpty).mkString("/")
+  val common_auth_ag        : String = Seq("common" , autogenName , "auth").filter(!_.isEmpty).mkString("/")
+  val common_auth_im        : String = Seq("common" , implementNm , "auth").filter(!_.isEmpty).mkString("/")
+  val common_filter_ag      : String = Seq("common" , autogenName , "filter").filter(!_.isEmpty).mkString("/")
+  val common_filter_im      : String = Seq("common" , implementNm , "filter").filter(!_.isEmpty).mkString("/")
+  val controller_ag         : String = Seq("controllers" , autogenName , "").filter(!_.isEmpty).mkString("/")
+  val controller_im         : String = Seq("controllers" , implementNm , "").filter(!_.isEmpty).mkString("/")
+  val form_ag               : String = Seq("forms" , autogenName , "").filter(!_.isEmpty).mkString("/")
+  val form_im               : String = Seq("forms" , implementNm , "").filter(!_.isEmpty).mkString("/")
+  val model_ag              : String = Seq("models" , autogenName , "").filter(!_.isEmpty).mkString("/")
+  val model_im              : String = Seq("models" , implementNm , "").filter(!_.isEmpty).mkString("/")
+  val model_dao_ag          : String = Seq("models" , autogenName , "daos").filter(!_.isEmpty).mkString("/")
+  val model_dao_im          : String = Seq("models" , implementNm , "daos").filter(!_.isEmpty).mkString("/")
+  val model_dto_ag          : String = Seq("models" , autogenName , "dtos").filter(!_.isEmpty).mkString("/")
+  val model_dto_im          : String = Seq("models" , implementNm , "dtos").filter(!_.isEmpty).mkString("/")
+  val model_service_ag      : String = Seq("models" , autogenName , "services").filter(!_.isEmpty).mkString("/")
+  val model_service_im      : String = Seq("models" , implementNm , "services").filter(!_.isEmpty).mkString("/")
+  val model_tables_ag       : String = Seq("models" , autogenName , "tables").filter(!_.isEmpty).mkString("/")
+  val model_tables_im       : String = Seq("models" , implementNm , "tables").filter(!_.isEmpty).mkString("/")
+  val model_repositories_ag : String = Seq("models" , autogenName , "repositories").filter(!_.isEmpty).mkString("/")
+  val model_repositories_im : String = Seq("models" , implementNm , "repositories").filter(!_.isEmpty).mkString("/")
+  val model_logics_ag       : String = Seq("models" , autogenName , "logics").filter(!_.isEmpty).mkString("/")
+  val model_logics_im       : String = Seq("models" , implementNm , "logics").filter(!_.isEmpty).mkString("/")
+  val view_ag               : String = Seq("views" , autogenName , "").filter(!_.isEmpty).mkString("/")
+  val view_im               : String = Seq("views" , implementNm , "").mkString("/")
 
   val pkg_assets_ag             : String = assets_ag.replace("/", ".")
   val pkg_assets_im             : String = assets_im.replace("/", ".")

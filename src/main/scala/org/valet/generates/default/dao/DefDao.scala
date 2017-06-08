@@ -25,17 +25,17 @@ object DefDao extends ValetUtility {
         |@ImplementedBy(classOf[${getAgDao(nowTable)}])
         |trait ${getAgDaoLike(nowTable)} extends HasDatabaseConfigProvider[JdbcProfile] {
         |
-        |  def all: Future[Seq[${nowTable.tableName}]]
-        |  def findById(id: Int): Future[Option[${nowTable.tableName}]]
-        |  def store(content: ${nowTable.tableName}): Future[Int]
-        |  def edit(content: ${nowTable.tableName}): Future[Int]
-        |  def delete(id: Int): Future[Int]
+        |  def $METHOD_DAO_ALL: Future[Seq[${nowTable.tableName}]]
+        |  def $METHOD_DAO_FIND(id: Int): Future[Option[${nowTable.tableName}]]
+        |  def $METHOD_DAO_STORE(content: ${nowTable.tableName}): Future[Int]
+        |  def $METHOD_DAO_EDIT(content: ${nowTable.tableName}): Future[Int]
+        |  def $METHOD_DAO_DELETE(id: Int): Future[Int]
         |
-        |  def allT: EitherT[Future, Throwable, Seq[${nowTable.tableName}]]
-        |  def findByIdT(id: Int): EitherT[Future, Throwable, Option[${nowTable.tableName}]]
-        |  def storeT(content: ${nowTable.tableName}): EitherT[Future, Throwable, Int]
-        |  def editT(content: ${nowTable.tableName}): EitherT[Future, Throwable, Int]
-        |  def deleteT(id: Int): EitherT[Future, Throwable, Int]
+        |  def ${METHOD_DAO_ALL}T: EitherT[Future, Throwable, Seq[${nowTable.tableName}]]
+        |  def ${METHOD_DAO_FIND}T(id: Int): EitherT[Future, Throwable, Option[${nowTable.tableName}]]
+        |  def ${METHOD_DAO_STORE}T(content: ${nowTable.tableName}): EitherT[Future, Throwable, Int]
+        |  def ${METHOD_DAO_EDIT}T(content: ${nowTable.tableName}): EitherT[Future, Throwable, Int]
+        |  def ${METHOD_DAO_DELETE}T(id: Int): EitherT[Future, Throwable, Int]
         |
         |""".stripMargin +
       nowTable.columnList.tail.map { column =>
@@ -52,19 +52,19 @@ object DefDao extends ValetUtility {
         |
         |  import driver.api._
         |
-        |  def all: Future[Seq[${nowTable.tableName}]] = {
+        |  def $METHOD_DAO_ALL: Future[Seq[${nowTable.tableName}]] = {
         |    db.run {
         |      Tables.${getTableName(nowTable)}.result
         |    }
         |  }
         |
-        |  def findById(id: Int): Future[Option[${nowTable.tableName}]] = {
+        |  def $METHOD_DAO_FIND(id: Int): Future[Option[${nowTable.tableName}]] = {
         |    db.run {
         |      Tables.${getTableName(nowTable)}.filter(_.${nowTable.columnList.head.columnName} === id.bind).result.headOption
         |    }
         |  }
         |
-        |  def store(content: ${nowTable.tableName}): Future[Int] = {
+        |  def $METHOD_DAO_STORE(content: ${nowTable.tableName}): Future[Int] = {
         |    db.run {
         |      Tables.${getTableName(nowTable)}.map { x =>
         |        (${nowTable.columnList.tail.map(c => "x." + c.columnName).mkString(", ")})
@@ -72,7 +72,7 @@ object DefDao extends ValetUtility {
         |    }
         |  }
         |
-        |  def edit(content: ${nowTable.tableName}): Future[Int] = {
+        |  def $METHOD_DAO_EDIT(content: ${nowTable.tableName}): Future[Int] = {
         |    db.run {
         |      Tables.${getTableName(nowTable)}.filter(_.${nowTable.columnList.head.columnName} === content.${nowTable.columnList.head.columnName}.bind).map { x =>
         |        (${nowTable.columnList.tail.map(c => "x." + c.columnName).mkString(", ")})
@@ -80,7 +80,7 @@ object DefDao extends ValetUtility {
         |    }
         |  }
         |
-        |  def delete(id: Int): Future[Int] = {
+        |  def $METHOD_DAO_DELETE(id: Int): Future[Int] = {
         |    db.run {
         |      Tables.${getTableName(nowTable)}.filter(_.${nowTable.columnList.head.columnName} === id.bind).delete
         |    }

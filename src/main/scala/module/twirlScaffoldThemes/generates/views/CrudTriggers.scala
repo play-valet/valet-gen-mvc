@@ -51,7 +51,7 @@ object CrudTriggers extends CrudCommons {
             .scopeRoot
             .scopeClosestElement(CUSTOM_TAG).getAttr.map(x =>s""" '${x._1} -> "${x._2}"""").mkString(",")
 
-        s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_STORE(), $formAttr) {""".stripMargin
+        s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_STORE(), $formAttr) {""".stripMargin
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"}".stripMargin
       case ln                                          => ln
     }.mkString("\n")
@@ -188,7 +188,7 @@ object CrudTriggers extends CrudCommons {
           dto
             .scopeRoot
             .scopeClosestElement(CUSTOM_TAG).getAttr.map(x =>s""" '${x._1} -> "${x._2}"""").mkString(",")
-        s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_UPDATE(${getPrimaryKeySyntaxTypeInt(ves)}), $formAttr) {""".stripMargin
+        s"""|@helper.form(${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_UPDATE(${getPrimaryKeySyntaxTypeInt(ves)}), $formAttr) {""".stripMargin
       case ln if ln.trim.startsWith("</" + CUSTOM_TAG) => s"}".stripMargin
       case ln                                          => ln
     }.mkString("\n")
@@ -277,17 +277,17 @@ trait CrudCommons extends TwirlConst {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {
       btn match {
-        case SCAFFOLD_LIST_BTN_SHOW_CREATE     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWCREATE()""")
-        case SCAFFOLD_LIST_BTN_SHOW_DETAIL     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWDETAIL($ROW_PARAM.$primaryKeyFieldName)""")
-        case SCAFFOLD_LIST_BTN_SHOW_EDIT       => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWEDIT($ROW_PARAM.$primaryKeyFieldName)""")
-        case SCAFFOLD_LIST_BTN_SUBMIT_DELETE   => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_DESTROY($ROW_PARAM.$primaryKeyFieldName)""")
+        case SCAFFOLD_LIST_BTN_SHOW_CREATE     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWCREATE()""")
+        case SCAFFOLD_LIST_BTN_SHOW_DETAIL     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWDETAIL($ROW_PARAM.$primaryKeyFieldName)""")
+        case SCAFFOLD_LIST_BTN_SHOW_EDIT       => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWEDIT($ROW_PARAM.$primaryKeyFieldName)""")
+        case SCAFFOLD_LIST_BTN_SUBMIT_DELETE   => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_DESTROY($ROW_PARAM.$primaryKeyFieldName)""")
         case SCAFFOLD_EDIT_BTN_SUBMIT_EDIT     => Map("href" -> "javascript:void(0)", "onclick" -> s"document.${getEditSubmitFormName(ves.nowTable.get)}.submit();return false;")
-        case SCAFFOLD_EDIT_BTN_CANCEL          => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWINDEX()""")
-        case SCAFFOLD_DETAIL_BTN_SHOW_EDIT     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWEDIT(${getPrimaryKeySyntaxTypeInt(ves)})""")
-        case SCAFFOLD_DETAIL_BTN_SUBMIT_DELETE => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_DESTROY(${getPrimaryKeySyntaxTypeInt(ves)})""")
-        case SCAFFOLD_DETAIL_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWINDEX()""")
+        case SCAFFOLD_EDIT_BTN_CANCEL          => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWINDEX()""")
+        case SCAFFOLD_DETAIL_BTN_SHOW_EDIT     => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWEDIT(${getPrimaryKeySyntaxTypeInt(ves)})""")
+        case SCAFFOLD_DETAIL_BTN_SUBMIT_DELETE => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_DESTROY(${getPrimaryKeySyntaxTypeInt(ves)})""")
+        case SCAFFOLD_DETAIL_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWINDEX()""")
         case SCAFFOLD_CREATE_BTN_SUBMIT_CREATE => Map("href" -> "javascript:void(0)", "onclick" -> s"document.${getCreateSubmitFormName(ves.nowTable.get)}.submit();return false;")
-        case SCAFFOLD_CREATE_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_SHOWINDEX()""")
+        case SCAFFOLD_CREATE_BTN_CANCEL        => Map("href" -> s"""@${getRouteController(ves.nowTable.get)}.$METHOD_CONTRL_SHOWINDEX()""")
         case _                                 => Map()
       }
     } else {

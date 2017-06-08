@@ -1,10 +1,11 @@
 package module.twirlScaffoldThemes.generates.controller
 
+import module.twirlScaffoldThemes.utils.{TwirlConst, TwirlPathDto}
 import org.valet.common._
 
-object DefTwirl_EitherT_Controller extends ValetUtility  {
+object DefTwirl_EitherT_Controller extends TwirlConst  {
 
-  def getAll(nowTable: GeneratedTable, dtos: ScaffoldDtos): String = {
+  def getAllByResultDto(nowTable: GeneratedTable, dtos: ScaffoldDtos, pathDto: TwirlPathDto): String = {
 ""
 
   }

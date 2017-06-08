@@ -31,7 +31,7 @@ object Launcher extends Utility {
   def run(confPath: String): Unit = {
     val conf: Config = ConfigFactory.parseFile(new File(confPath))
     //    Developments.getConfKeyValues(conf)
-    //    Developments.echoClassNames
+//        Developments.echoClassNames
     //    Developments.echoValAndEcho
 
     val confDto = Loaders.getConfDto(conf)

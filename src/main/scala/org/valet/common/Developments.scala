@@ -97,18 +97,11 @@ object Developments extends Utility {
       ).map { f =>
         s"""
            |  // ${f}
-           |  def get${f}(generatedTable: GeneratedTable): String = {
-           |    getTableName(generatedTable) + suffix${f}
-           |  }
-           |  def getAg${f}(generatedTable: GeneratedTable): String = {
-           |    getAgTableName(generatedTable) + suffix${f}
-           |  }
-           |  def get${f}Like(generatedTable: GeneratedTable): String = {
-           |    getLike(getTableName(generatedTable) + suffix${f})
-           |  }
-           |  def getAg${f}Like(generatedTable: GeneratedTable): String = {
-           |    getLike(getAgTableName(generatedTable) + suffix${f})
-           |  }
+           |  def get${f}(generatedTable: GeneratedTable): String = getTableName(generatedTable) + suffix${f}
+           |  def getFieldAg${f}(generatedTable: GeneratedTable): String = toFirstCharLower(getAgTableName(generatedTable) + suffix${f})
+           |  def getAg${f}(generatedTable: GeneratedTable): String = getAgTableName(generatedTable) + suffix${f}
+           |  def get${f}Like(generatedTable: GeneratedTable): String = getLike(getTableName(generatedTable) + suffix${f})
+           |  def getAg${f}Like(generatedTable: GeneratedTable): String = getLike(getAgTableName(generatedTable) + suffix${f})
       """.stripMargin
       }.mkString("")
     )
