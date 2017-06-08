@@ -12,7 +12,7 @@ object DefBuildsbt extends ValetUtility {
   /**
     * TODO: trickery
     */
-  def addLibraryDependencies(dtos: ScaffoldDtos): String = {
+  def addLibraryDependencies(dtos: ScaffoldDtos): Unit = {
 
     val filepath = "./build.sbt"
     makeFileIfNotExist(new File(filepath))
@@ -60,8 +60,6 @@ object DefBuildsbt extends ValetUtility {
     }).mkString("\n")
 
     forceWrite(new File(filepath), content)
-
-    ""
   }
 
   def isAllContains(isContains: Seq[String], bigSrc: Seq[String]): Boolean = {
