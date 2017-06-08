@@ -21,7 +21,7 @@ object CreateCrud extends CrudUtils {
               // 処理開始
               .replaceTextContent(CLASS_SCAFFOLD_CREATE_FIELD, column.columnName)
               .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_CREATE_VALUE, getTagDefault("input-text", None))
-              .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "value", "")
+              .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "value", getCreateFieldValue(column, ves))
               .replaceAttr(CLASS_SCAFFOLD_CREATE_VALUE, "name", toSnakeCase(column.columnName))
               .removeAttrValue("class", SCAFFOLD_CREATE_VALUE, CLASS_SCAFFOLD_CREATE_VALUE)
               .removeAttrValue("class", SCAFFOLD_CREATE_FIELD, CLASS_SCAFFOLD_CREATE_FIELD)
@@ -77,7 +77,7 @@ object EditCrud extends CrudUtils {
               .replaceTextContent(CLASS_SCAFFOLD_EDIT_FIELD, column.columnName)
               // 表示用 primary id
               .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_EDIT_VALUE, getTagDefault("span", None))
-              .replaceTextContent(CLASS_SCAFFOLD_EDIT_VALUE, getFieldValue(column, ves))
+              .replaceTextContent(CLASS_SCAFFOLD_EDIT_VALUE, getCreateFieldValue(column, ves))
               .removeAttr("type")
               .removeAttr("value")
               .removeAttr("name")
@@ -86,7 +86,7 @@ object EditCrud extends CrudUtils {
               .addAfterSearched(CLASS_SCAFFOLD_EDIT_VALUE,
               getTagDefault("input-hidden",
                 Some(Map(
-                  "value" -> getFieldValue(column, ves),
+                  "value" -> getCreateFieldValue(column, ves),
                   "name" -> toSnakeCase(column.columnName)
                 ))))
 
@@ -103,7 +103,7 @@ object EditCrud extends CrudUtils {
               // 処理開始
               .replaceTextContent(CLASS_SCAFFOLD_EDIT_FIELD, column.columnName)
               .replaceElementAndOverwriteAttr(CLASS_SCAFFOLD_EDIT_VALUE, getTagDefault("input-text", None))
-              .replaceAttr(CLASS_SCAFFOLD_EDIT_VALUE, "value", getFieldValue(column, ves))
+              .replaceAttr(CLASS_SCAFFOLD_EDIT_VALUE, "value", getEditFieldValue(column, ves))
               .replaceAttr(CLASS_SCAFFOLD_EDIT_VALUE, "name", toSnakeCase(column.columnName))
               .removeAttrValue("class", SCAFFOLD_EDIT_VALUE, CLASS_SCAFFOLD_EDIT_VALUE)
               .removeAttrValue("class", SCAFFOLD_EDIT_FIELD, CLASS_SCAFFOLD_EDIT_FIELD)
@@ -122,7 +122,7 @@ object EditCrud extends CrudUtils {
     dto
       .scopeClosestElement(CLASS_SCAFFOLD_EDIT_LOGIC_FORM)
       .renameTag(CUSTOM_TAG)
-      .replaceAttr(CUSTOM_TAG, "name", getCreateSubmitFormName(ves.nowTable.get))
+      .replaceAttr(CUSTOM_TAG, "name", getEditSubmitFormName(ves.nowTable.get))
       .removeAttrValue("class", SCAFFOLD_EDIT_LOGIC_FORM)
 
     // custom tag replace 処理
@@ -244,10 +244,18 @@ trait CrudUtils extends TwirlConst {
   }
 
 
-  def getFieldValue(column: GeneratedColumn, ves: Valiables): String = {
+  def getCreateFieldValue(column: GeneratedColumn, ves: Valiables): String = {
     val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
     if (isUsevResultDto == "YES") {
       "@{" + DTO_PARAM + "." + getAgCreateFieldForm(ves.nowTable.get) + "(\"" + toSnakeCase(column.columnName) + "\").value}"
+    } else {
+      ""
+    }
+  }
+  def getEditFieldValue(column: GeneratedColumn, ves: Valiables): String = {
+    val isUsevResultDto = ves.dtos.confDto.modulesTwirlScaffoldThemesModulesResultDtoIsUse
+    if (isUsevResultDto == "YES") {
+      "@{" + DTO_PARAM + "." + getAgEditFieldForm(ves.nowTable.get) + "(\"" + toSnakeCase(column.columnName) + "\").value}"
     } else {
       ""
     }
