@@ -39,7 +39,7 @@ object DefTwirl_ASync_Controller extends TwirlConst  {
         |
         |  def $METHOD_CONTRL_SHOWINDEX = Action.async { implicit request =>
         |    ${getFieldAgDao(nowTable)}.$METHOD_DAO_ALL.map { result =>
-        |      Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_LIST(${default_ag_resultViewDtos(dtos)}(None, ${getAgDtoFieldList(nowTable)}} = result)))
+        |      Ok(${getTableFieldName(nowTable)}.$CRUD_FILENAME_LIST(${default_ag_resultViewDtos(dtos)}(None, ${getAgDtoFieldList(nowTable)} = result)))
         |    }.recover {
         |      case _ => InternalServerError
         |    }
