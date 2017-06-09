@@ -20,8 +20,7 @@ case class TwirlPathDto(
                          app_assets_project: String,
                          app_views: String,
                          app_views_autogen: String,
-                         app_views_autogen_project: String,
-                         pkg_views_autogen_crud_dir:String
+                         app_views_autogen_project: String
                        )
 
 case class ReplaceDto(target: String, replacement: String)

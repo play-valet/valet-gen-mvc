@@ -1,11 +1,20 @@
 package module.twirlScaffoldThemes.generates.controller
 
+import java.io.File
+
 import module.twirlScaffoldThemes.utils.{TwirlConst, TwirlPathDto}
 import org.valet.common._
 
 object DefTwirl_ASync_Controller extends TwirlConst  {
 
   def getAllByResultDto(nowTable: GeneratedTable, dtos: ScaffoldDtos, pathDto: TwirlPathDto): String = {
+
+    val gitPathBackendAdminPath = dtos.confDto.modulesTwirlScaffoldThemesSourceBackendAdmin
+    val gitProjectName: String = gitPathBackendAdminPath.split("/").last.dropRight(4)
+    val snakeCase = toSnakeCase(gitProjectName.replaceAll("-", "_"))
+    val optFile: Option[File] = getDirFileList(s"./app/views/autogen/$snakeCase", Seq()).filter(file => file.isFile && file.getParentFile.getName == CRUD_TEMPLATE_DIR).headOption
+    val path :String = optFile.map(_.getParentFile.getPath).getOrElse("")
+    val pkg_views_autogen_crud_dir = path.replace("./app/views/", "").replace("/", ".").split('.').init.mkString(".")
 
     s"""|package $pkg_controller_ag
         |
@@ -19,7 +28,7 @@ object DefTwirl_ASync_Controller extends TwirlConst  {
         |import $pkg_model_dto_ag.${default_ag_resultViewDtos(dtos)}
         |import play.api.i18n.{I18nSupport, MessagesApi}
         |import play.api.mvc._
-        |import views.html.${pathDto.pkg_views_autogen_crud_dir}._
+        |import views.html.${pkg_views_autogen_crud_dir}._
         |
         |import scala.concurrent.{ExecutionContext, Future}
         |

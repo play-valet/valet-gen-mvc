@@ -1,15 +1,14 @@
 package module.twirlScaffoldThemes.generates.controller
 
-import org.valet.common._
 import module.twirlScaffoldThemes.generates._common.ValetProcessCycle
 import module.twirlScaffoldThemes.generates.views.TwirlScaffoldView.getTwirlPathDto
 import module.twirlScaffoldThemes.utils.TwirlPathDto
+import org.valet.common._
 
 object TwirlScaffoldController extends ValetProcessCycle with ValetUtility {
 
 
   override def initAction(dtos: ScaffoldDtos): Unit = {
-
 
   }
 

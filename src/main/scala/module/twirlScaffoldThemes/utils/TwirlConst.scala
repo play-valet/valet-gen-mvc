@@ -1,5 +1,7 @@
 package module.twirlScaffoldThemes.utils
 
+import java.io.File
+
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.valet.common.{GeneratedTable, ScaffoldDtos, ValetUtility}
@@ -55,16 +57,6 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
     val gitProjectName: String = gitPathBackendAdminPath.split("/").last.dropRight(4)
     val snakeCase = toSnakeCase(gitProjectName.replaceAll("-", "_"))
 
-    val optFile = getDirFileList(s"./app/views/autogen/$snakeCase", Seq()).find(file => file.isFile &&
-      file.getParentFile.getName == CRUD_TEMPLATE_DIR)
-
-    val str = if (optFile.isDefined) {
-      optFile.map(file => file.getParentFile.getPath.replace("./app/views/", "")
-        .replace("/", ".").split('.').init.mkString(".")).getOrElse("")
-    } else {
-      ""
-    }
-
     TwirlPathDto(
       projectName = gitProjectName,
       snakeCase = snakeCase,
@@ -81,8 +73,7 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
       app_assets_project = s"./app/assets/$snakeCase",
       app_views = s"./app/views",
       app_views_autogen = s"./app/views/autogen",
-      app_views_autogen_project = s"./app/views/autogen/$snakeCase",
-      pkg_views_autogen_crud_dir = str
+      app_views_autogen_project = s"./app/views/autogen/$snakeCase"
     )
   }
 
