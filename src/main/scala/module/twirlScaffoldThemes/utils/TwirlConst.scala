@@ -1,6 +1,5 @@
 package module.twirlScaffoldThemes.utils
 
-import module.twirlScaffoldThemes.generates.views.TwirlScaffoldView.getDirFileList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.valet.common.{GeneratedTable, ScaffoldDtos, ValetUtility}
@@ -24,7 +23,9 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
   val SUBMIT_FORM = "SubmitForm"
 
   def getRouteController(nowTable: GeneratedTable): String = pkg_controller_ag + s".routes.${getAgTableName(nowTable)}Controller"
+
   def getEditSubmitFormName(nowTable: GeneratedTable): String = "edit" + SUBMIT_FORM + getTableName(nowTable)
+
   def getCreateSubmitFormName(nowTable: GeneratedTable): String = "create" + SUBMIT_FORM + getTableName(nowTable)
 
   def getButtonI18nCode(str: String): String = {
@@ -54,6 +55,16 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
     val gitProjectName: String = gitPathBackendAdminPath.split("/").last.dropRight(4)
     val snakeCase = toSnakeCase(gitProjectName.replaceAll("-", "_"))
 
+    val optFile = getDirFileList(s"./app/views/autogen/$snakeCase", Seq()).find(file => file.isFile &&
+      file.getParentFile.getName == CRUD_TEMPLATE_DIR)
+
+    val str = if (optFile.isDefined) {
+      optFile.map(file => file.getParentFile.getPath.replace("./app/views/", "")
+        .replace("/", ".").split('.').init.mkString(".")).getOrElse("")
+    } else {
+      ""
+    }
+
     TwirlPathDto(
       projectName = gitProjectName,
       snakeCase = snakeCase,
@@ -71,13 +82,14 @@ trait TwirlConst extends FormsRegex with ValetUtility with AutogenTwirl {
       app_views = s"./app/views",
       app_views_autogen = s"./app/views/autogen",
       app_views_autogen_project = s"./app/views/autogen/$snakeCase",
-      pkg_views_autogen_crud_dir = getDirFileList(s"./app/views/autogen/$snakeCase", Seq()).find(file => file.isFile && file.getParentFile.getName == CRUD_TEMPLATE_DIR).map(file => file.getParentFile.getPath.replace("./app/views/", "").replace("/", ".").split('.').init.mkString(".")).getOrElse("")
+      pkg_views_autogen_crud_dir = str
     )
   }
 
   def getTagDefault(tagName: String, defaultAttr: Option[Map[String, String]]): Element = {
     def setAttr(elm: Element, attr: Option[Map[String, String]]): CustomJsoupElement =
       if (attr.isDefined) CustomJsoupElement(elm).setAttr(attr.get) else CustomJsoupElement(elm)
+
     tagName match {
       case "input-text"   => setAttr(Jsoup.parse("""<input type="text">""").body().child(0), defaultAttr).getElement
       case "input-hidden" => setAttr(Jsoup.parse("""<input type="hidden">""").body().child(0), defaultAttr).getElement
